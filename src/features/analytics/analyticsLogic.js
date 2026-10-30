@@ -10,7 +10,8 @@
  * Principles:
  * - A day with missing data is never treated as zero activity.
  * - Alerts only use complete days, and a gap in the data breaks a streak.
- * - Everything is calculated from the patient's own usual baseline.
+ * - "Consecutive" means consecutive CALENDAR days.
+ * - Everything is compared with the patient's own usual baseline.
  */
 
 import { analyticsPatient, simulatedWeek } from "./analyticsData.js";
@@ -31,13 +32,22 @@ const REQUIRED_FIELDS = [
   "mealsLogged"
 ];
 
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
 // A day is usable only if it is marked complete AND every number is present.
-// This protects against half-filled days creating misleading results.
 export function hasData(day) {
   return (
     day.isComplete === true &&
     REQUIRED_FIELDS.every((field) => typeof day[field] === "number")
   );
+}
+
+// True only if `current` is exactly one calendar day after `previous`.
+// Dates are ISO strings: YYYY-MM-DD.
+function isNextDay(previous, current) {
+  const diff =
+    Date.parse(`${current}T00:00:00Z`) - Date.parse(`${previous}T00:00:00Z`);
+  return diff === ONE_DAY_MS;
 }
 
 // Daily engagement = games + activities + album interactions.
@@ -53,15 +63,18 @@ export function getMissedMedicines(day) {
   return Math.max(0, day.medicineScheduled - day.medicineConfirmed);
 }
 
-// Medicine confirmation percentage for one day. Null when no data.
+// Medicine percentage for one day (0 to 100).
+// Null when there is no data OR nothing was scheduled (not applicable).
 export function getMedicinePercent(day) {
   if (!hasData(day) || day.medicineScheduled === 0) return null;
-  return Math.round((day.medicineConfirmed / day.medicineScheduled) * 100);
+  const percent = Math.round((day.medicineConfirmed / day.medicineScheduled) * 100);
+  return Math.min(100, percent);
 }
 
-// Build one summary row per day (the dashboard charts can use these).
+// Build one summary row per day, sorted by date (oldest first).
 export function getDailySummaries(week = simulatedWeek) {
-  return week.map((day) => {
+  const sorted = [...week].sort((a, b) => a.date.localeCompare(b.date));
+  return sorted.map((day) => {
     const usable = hasData(day);
     const engagement = getDailyEngagement(day);
     return {
@@ -79,31 +92,36 @@ export function getDailySummaries(week = simulatedWeek) {
   });
 }
 
-// Weekly totals use ONLY complete days, so missing data is never counted as zero.
+// Weekly totals use ONLY complete days.
+// With no complete days, totals are null (NOT 0): we cannot calculate them.
 export function getWeeklyTotals(dailySummaries) {
   const complete = dailySummaries.filter((d) => d.isComplete);
-  const totalEngagement = complete.reduce((sum, d) => sum + d.engagement, 0);
-  const scheduled = complete.reduce((sum, d) => sum + d.medicineScheduled, 0);
-  const confirmed = complete.reduce((sum, d) => sum + d.medicineConfirmed, 0);
+  const n = complete.length;
+  const sum = (field) => complete.reduce((total, d) => total + d[field], 0);
+
+  const totalEngagement = n === 0 ? null : sum("engagement");
+  const scheduled = n === 0 ? null : sum("medicineScheduled");
+  const confirmed = n === 0 ? null : sum("medicineConfirmed");
 
   return {
-    daysWithData: complete.length,
-    daysWithoutData: dailySummaries.length - complete.length,
+    daysWithData: n,
+    daysWithoutData: dailySummaries.length - n,
     totalEngagement,
     averageEngagementPerDay:
-      complete.length === 0
-        ? null
-        : Math.round((totalEngagement / complete.length) * 10) / 10,
+      n === 0 ? null : Math.round((totalEngagement / n) * 10) / 10,
     medicineScheduled: scheduled,
     medicineConfirmed: confirmed,
-    medicineMissed: Math.max(0, scheduled - confirmed),
+    medicineMissed: n === 0 ? null : Math.max(0, scheduled - confirmed),
     medicinePercent:
-      scheduled === 0 ? null : Math.round((confirmed / scheduled) * 100)
+      n === 0 || scheduled === 0
+        ? null
+        : Math.min(100, Math.round((confirmed / scheduled) * 100))
   };
 }
 
-// Trend: compare the earlier and later halves of the complete days.
-// Needs at least 4 complete days, otherwise we say there is not enough data.
+// Trend: compare the average of the earlier half with the later half of the
+// complete days. Needs at least 4 complete days, otherwise "not-enough-data".
+// A change of more than 0.5 activities per day counts as increasing/decreasing.
 export function getTrend(dailySummaries) {
   const values = dailySummaries
     .filter((d) => d.isComplete)
@@ -135,22 +153,25 @@ export function getAlerts(dailySummaries) {
     }
   });
 
-  // Alert 2: low engagement on consecutive complete days.
-  // A day with missing data BREAKS the streak, so we never claim a
-  // pattern across a gap we cannot see.
+  // Alert 2: low engagement on consecutive complete CALENDAR days.
+  // An incomplete day, or a missing date, breaks the streak.
   let streak = 0;
+  let lastLowDate = null;
   dailySummaries.forEach((d) => {
-    if (!d.isComplete) {
+    if (!d.isComplete || !d.isLowEngagement) {
       streak = 0;
+      lastLowDate = null;
       return;
     }
-    streak = d.isLowEngagement ? streak + 1 : 0;
+    streak = lastLowDate && isNextDay(lastLowDate, d.date) ? streak + 1 : 1;
+    lastLowDate = d.date;
+
     if (streak === THRESHOLDS.lowEngagementDaysInARow) {
       alerts.push({
         type: "low-engagement",
         date: d.date,
         message:
-          "Engagement has decreased over the last two days compared with the usual routine. Consider checking in with the patient."
+          "Engagement has been below the usual routine for the last two days. Consider checking in with the patient."
       });
     }
   });

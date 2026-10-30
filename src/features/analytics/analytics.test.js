@@ -134,3 +134,44 @@ test("alert wording is gentle and makes no diagnosis", () => {
     assert.doesNotMatch(a.message, /dementia|diagnos|disease|worsen/i);
   });
 });
+test("no complete days: weekly totals are null, not zero", () => {
+  const week = [makeGapDay("2026-10-24"), makeGapDay("2026-10-25")];
+  const weekly = getAnalyticsSummary(week).weekly;
+  assert.equal(weekly.daysWithData, 0);
+  assert.equal(weekly.daysWithoutData, 2);
+  assert.equal(weekly.totalEngagement, null);
+  assert.equal(weekly.averageEngagementPerDay, null);
+  assert.equal(weekly.medicineScheduled, null);
+  assert.equal(weekly.medicinePercent, null);
+});
+
+test("a missing calendar date breaks the low-engagement streak", () => {
+  // 10-26 and 10-28 are both low, but 10-27 has no row at all.
+  const week = [makeDay("2026-10-26", low), makeDay("2026-10-28", low)];
+  const alerts = getAlerts(getDailySummaries(week));
+  assert.equal(alerts.filter((a) => a.type === "low-engagement").length, 0);
+});
+
+test("rows given out of order are sorted by date before alerts", () => {
+  const week = [
+    makeDay("2026-10-26", low),
+    makeDay("2026-10-24"),
+    makeDay("2026-10-25", low)
+  ];
+  const daily = getDailySummaries(week);
+  assert.deepEqual(
+    daily.map((d) => d.date),
+    ["2026-10-24", "2026-10-25", "2026-10-26"]
+  );
+  const lowAlerts = getAlerts(daily).filter((a) => a.type === "low-engagement");
+  assert.equal(lowAlerts.length, 1);
+  assert.equal(lowAlerts[0].date, "2026-10-26");
+});
+
+test("zero medicines scheduled gives null percent, and zero confirmed gives 0", () => {
+  const none = makeDay("2026-10-24", { medicineScheduled: 0, medicineConfirmed: 0 });
+  const missedAll = makeDay("2026-10-25", { medicineScheduled: 2, medicineConfirmed: 0 });
+  const [a, b] = getDailySummaries([none, missedAll]);
+  assert.equal(a.medicinePercent, null);
+  assert.equal(b.medicinePercent, 0);
+});

@@ -10,12 +10,15 @@ Provisional thresholds (to be confirmed with the product lead):
 
 Engagement = games played + activities completed + album interactions.
 Missed medicine = scheduled - confirmed.
-
+| 13 | No complete days | Every day missing | Weekly totals, average and medicine percent are null (not 0) |
+| 14 | Missing calendar date | Low on 10-26, no row for 10-27, low on 10-28 | No alert, the date gap breaks the streak |
+| 15 | Rows out of order | Days given 26th, 24th, 25th | Sorted by date first, then alerts work correctly |
+| 16 | Zero medicines scheduled | 0 scheduled, and separately 2 scheduled with 0 confirmed | Percent is null for the first (not applicable) and 0 for the second |
 ## How to run the tests
 
     node --test src/features/analytics/analytics.test.js
 
-Expected: 13 tests, all passing.
+Expected: 17 tests, all passing.
 
 ## Scenarios
 
