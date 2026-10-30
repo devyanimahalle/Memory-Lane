@@ -98,6 +98,8 @@ export default function FindDifference({ onBack, onComplete }) {
   const currentScene = SCENES[activeSceneIdx];
 
   const handleImageClick = (e) => {
+    if (found.length === currentScene.differences.length) return;
+
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -177,9 +179,9 @@ export default function FindDifference({ onBack, onComplete }) {
       {/* Side-by-Side Landscape Panels */}
       <div className="difference-images">
         {/* Panel 1 (Original) */}
-        <div className="photo-panel" onClick={handleImageClick}>
+        <div className="photo-panel">
           <div className="photo-label">Original Image</div>
-          <div className="photo-container">
+          <div className="photo-container" onClick={handleImageClick}>
             <img
               src={currentScene.imageA}
               alt="Original scene"
@@ -204,9 +206,9 @@ export default function FindDifference({ onBack, onComplete }) {
         </div>
 
         {/* Panel 2 (With Natural Differences) */}
-        <div className="photo-panel" onClick={handleImageClick}>
+        <div className="photo-panel">
           <div className="photo-label highlight">Spot Differences Here</div>
-          <div className="photo-container">
+          <div className="photo-container" onClick={handleImageClick}>
             <img
               src={currentScene.imageB}
               alt="Scene with natural differences"

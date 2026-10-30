@@ -125,7 +125,6 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  cursor: crosshair;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -143,6 +142,7 @@
   letter-spacing: 0.5px;
   text-align: center;
   border-bottom: 2px solid #cfe2d5;
+  user-select: none;
 }
 
 .photo-label.highlight {
@@ -159,6 +159,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: crosshair;
 }
 
 .photo-img {

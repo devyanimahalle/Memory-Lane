@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { matchingItems } from "./activityData";
 import FindDifference from "./games/FindDifference/FindDifference";
 import PicturePuzzle from "./games/PicturePuzzle/PicturePuzzle";
-import { playGentleChime, playCelebrationChime } from "./soundEffects";
+import { playCardFlip, playGentleChime, playCelebrationChime } from "./soundEffects";
 import "./activities.css";
 
 const createEventId = () =>
@@ -93,11 +93,20 @@ export default function ActivitiesModule({ onEngagement }) {
 
   const selectCard = (card) => {
     if (
-      selected.length >= 2 ||
       selected.includes(card.cardId) ||
       matched.includes(card.id) ||
       matched.length === selectedDifficulty.pairs
     ) {
+      return;
+    }
+
+    playCardFlip();
+
+    // If already showing 2 mismatched cards, dismiss immediately and pick this card
+    if (selected.length >= 2) {
+      clearTimeout(mismatchTimer.current);
+      setSelected([card.cardId]);
+      setGameMessage("Tap a second card to find a match.");
       return;
     }
 
@@ -168,8 +177,11 @@ export default function ActivitiesModule({ onEngagement }) {
     }
   };
 
-  // Cleanup
+  // Initialization & cleanup
   useEffect(() => {
+    if (cards.length === 0) {
+      setupDeckForPairs(selectedDifficulty.pairs);
+    }
     return () => {
       clearTimeout(mismatchTimer.current);
     };
