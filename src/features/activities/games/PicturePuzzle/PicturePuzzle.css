@@ -1,0 +1,177 @@
+
+.pp-container {
+  max-width: 850px;
+  margin: 30px auto;
+  padding: 30px;
+  color: #24483b;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.pp-back {
+  display: block;
+  border: none;
+  background: #e8f3eb;
+  color: #285c43;
+  padding: 12px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.pp-heading {
+  margin: 35px 0 25px;
+}
+
+.pp-label {
+  color: #69977b;
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
+.pp-heading h1 {
+  font-size: 34px;
+  margin: 12px 0;
+}
+
+.pp-heading p {
+  color: #71847a;
+  font-size: 16px;
+}
+
+.pp-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin: 25px 0;
+}
+
+.pp-info div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pp-info div span {
+  font-size: 11px;
+  color: #789184;
+  letter-spacing: 1px;
+}
+
+.pp-info div strong {
+  font-size: 25px;
+}
+
+.pp-info button,
+.pp-restart {
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #dcefe2;
+  color: #285c43;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.pp-preview {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  background: #f1f7f2;
+  border-radius: 15px;
+  padding: 15px;
+  margin: 20px auto;
+  max-width: 300px;
+}
+
+.pp-preview span {
+  font-size: 35px;
+}
+
+.pp-board {
+  width: min(100%, 420px);
+  margin: 30px auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.pp-tile {
+  min-height: 160px;
+  border: 3px solid transparent;
+  border-radius: 20px;
+  background: #eaf4ed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pp-tile span {
+  font-size: 65px;
+}
+
+.pp-tile small {
+  color: #557464;
+  font-size: 13px;
+}
+
+.pp-tile:hover {
+  transform: translateY(-3px);
+}
+
+.pp-tile.pp-selected {
+  border-color: #3b9b70;
+  background: #d4eddd;
+  transform: scale(0.96);
+}
+
+.pp-instruction {
+  color: #617b6d;
+  margin: 20px 0;
+  line-height: 1.6;
+}
+
+.pp-success {
+  background: #e8f5e9;
+  padding: 18px;
+  border-radius: 16px;
+  margin: 20px auto;
+}
+
+.pp-success h2 {
+  color: #28734b;
+}
+
+.pp-restart {
+  background: #347e59;
+  color: white;
+  margin-top: 15px;
+}
+
+.pp-restart:hover {
+  background: #245e41;
+}
+
+@media (max-width: 500px) {
+  .pp-container {
+    padding: 15px;
+  }
+
+  .pp-heading h1 {
+    font-size: 27px;
+  }
+
+  .pp-tile {
+    min-height: 125px;
+  }
+
+  .pp-tile span {
+    font-size: 48px;
+  }
+}

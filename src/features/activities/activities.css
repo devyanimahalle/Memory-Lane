@@ -1,0 +1,626 @@
+
+/* ==============================
+   MEMORY LANE - ACTIVITIES MODULE
+================================ */
+
+.ml-module {
+  width: 100%;
+  min-height: 100%;
+  padding: 30px;
+  background: #f8f8f1;
+  color: #293c34;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.ml-module * {
+  box-sizing: border-box;
+}
+
+/* HEADINGS */
+
+.ml-heading,
+.ml-game-heading {
+  margin-bottom: 28px;
+}
+
+.ml-eyebrow {
+  color: #668875;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.ml-heading h1,
+.ml-game-heading h1 {
+  font-size: clamp(27px, 4vw, 38px);
+  margin: 10px 0;
+  color: #294b3c;
+}
+
+.ml-heading p,
+.ml-game-heading p {
+  font-size: 17px;
+  color: #718078;
+  line-height: 1.6;
+}
+
+/* WELCOME BANNER */
+
+.ml-welcome {
+  background: linear-gradient(110deg, #dcebdc, #eaf0d9);
+  border-radius: 24px;
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.ml-welcome span:first-child {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #64836d;
+}
+
+.ml-welcome h2 {
+  color: #315b43;
+  font-size: 25px;
+}
+
+.ml-welcome p {
+  color: #63776a;
+  font-size: 15px;
+}
+
+.ml-welcome-emoji {
+  font-size: 65px;
+}
+
+/* ACTIVITY CARDS */
+
+.ml-section-title {
+  margin-bottom: 20px;
+  font-size: 23px;
+}
+
+.ml-activity-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(220px, 1fr)
+  );
+  gap: 20px;
+}
+
+.ml-activity-card {
+  border: 1px solid transparent;
+  border-radius: 22px;
+  padding: 25px;
+  text-align: left;
+  cursor: pointer;
+  min-height: 260px;
+  transition: transform 0.25s, box-shadow 0.25s;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: inherit;
+}
+
+.ml-activity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(40, 70, 50, 0.10);
+}
+
+.ml-card-green {
+  background: #e3eddf;
+}
+
+.ml-card-peach {
+  background: #f9e9dd;
+}
+
+.ml-card-lavender {
+  background: #ece8f5;
+}
+
+.ml-card-emoji {
+  font-size: 42px;
+  margin-bottom: 17px;
+}
+
+.ml-card-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: #718679;
+}
+
+.ml-activity-card h3 {
+  font-size: 21px;
+  margin: 12px 0 7px;
+  color: #345444;
+}
+
+.ml-activity-card p {
+  font-size: 14px;
+  color: #68766c;
+  line-height: 1.6;
+}
+
+.ml-card-action {
+  margin-top: auto;
+  font-weight: 750;
+  color: #39674e;
+  padding-top: 15px;
+}
+
+/* JOY MESSAGE */
+
+.ml-joy-note {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  padding: 20px;
+  border-radius: 18px;
+  margin-top: 28px;
+  border: 1px solid #e9eee5;
+}
+
+.ml-joy-note > span {
+  font-size: 30px;
+}
+
+.ml-joy-note p {
+  margin: 5px 0 0;
+  color: #78857c;
+}
+
+/* BACK BUTTON */
+
+.ml-back {
+  border: none;
+  background: transparent;
+  color: #52745f;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 10px 0;
+  margin-bottom: 25px;
+}
+
+/* MATCHING GAME */
+
+.ml-match-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(90px, 145px));
+  justify-content: center;
+  gap: 17px;
+  margin: 30px auto;
+}
+
+.ml-match-card {
+  aspect-ratio: 1;
+  border: 2px solid #dfe9db;
+  background: #e6eee2;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s;
+  font-family: inherit;
+}
+
+.ml-match-card:hover:not(:disabled) {
+  transform: translateY(-4px);
+}
+
+.ml-match-card > span {
+  font-size: 42px;
+}
+
+.ml-match-card small {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ml-match-card.revealed {
+  background: white;
+  border-color: #92b79a;
+}
+
+.ml-match-card.matched {
+  background: #e2f0df;
+  border-color: #76a982;
+}
+
+.ml-match-card:disabled {
+  cursor: default;
+}
+
+.ml-hidden-card {
+  font-size: 45px;
+  color: #668c70;
+}
+
+/* FEEDBACK AND COMPLETION */
+
+.ml-feedback {
+  color: #52755e;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+  margin: 22px 0;
+  min-height: 25px;
+}
+
+.ml-complete {
+  text-align: center;
+  padding: 25px;
+  margin: 20px 0;
+  background: #eaf2e5;
+  border-radius: 22px;
+}
+
+.ml-complete > span {
+  font-size: 45px;
+}
+
+.ml-complete h2 {
+  color: #3b6749;
+}
+
+.ml-complete p {
+  color: #6c7c6d;
+}
+
+/* BUTTONS */
+
+.ml-primary-btn,
+.ml-secondary-btn {
+  width: 100%;
+  max-width: 340px;
+  display: block;
+  margin: 15px auto;
+  min-height: 54px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: inherit;
+}
+
+.ml-primary-btn {
+  border: none;
+  background: #527e61;
+  color: white;
+}
+
+.ml-primary-btn:hover {
+  background: #3e674d;
+}
+
+.ml-secondary-btn {
+  border: 1px solid #cddbcf;
+  background: white;
+  color: #52745e;
+}
+
+/* DAILY ROUTINE */
+
+.ml-routine-list {
+  max-width: 650px;
+  margin: 25px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ml-routine-card {
+  background: white;
+  border: 2px solid #e3eae0;
+  border-radius: 18px;
+  padding: 17px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.ml-routine-card.selected {
+  border-color: #5b956c;
+  background: #edf5e9;
+}
+
+.ml-routine-number {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #e4eee1;
+  color: #416d4d;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.ml-routine-emoji {
+  font-size: 35px;
+}
+
+.ml-routine-card strong {
+  flex: 1;
+  font-size: 17px;
+}
+
+.ml-move-controls {
+  display: flex;
+  gap: 7px;
+}
+
+.ml-move-controls button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #dbe5d9;
+  border-radius: 10px;
+  background: #f5f8f2;
+  color: #416d4d;
+  font-size: 21px;
+  cursor: pointer;
+}
+
+.ml-move-controls button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* MEMORY ALBUM CATEGORIES */
+
+.ml-category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 25px 0;
+}
+
+.ml-category-list button {
+  border: 1px solid #d9e3d8;
+  background: white;
+  color: #64766b;
+  border-radius: 25px;
+  padding: 11px 17px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.ml-category-list button.active {
+  background: #527e61;
+  color: white;
+  border-color: #527e61;
+}
+
+/* PHOTO GALLERY */
+
+.ml-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(190px, 1fr)
+  );
+  gap: 20px;
+}
+
+.ml-photo-card {
+  border: 1px solid #e5e9df;
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+  font-family: inherit;
+}
+
+.ml-photo-card:hover {
+  transform: translateY(-4px);
+}
+
+.ml-photo-placeholder {
+  height: 175px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ml-photo-placeholder > span {
+  font-size: 65px;
+}
+
+.ml-photo-placeholder small,
+.ml-large-photo small {
+  font-size: 11px;
+  color: #68766c;
+}
+
+.ml-photo-info {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 6px;
+}
+
+.ml-photo-info strong {
+  font-size: 16px;
+  color: #3d5746;
+}
+
+.ml-photo-info span {
+  font-size: 12px;
+  color: #829087;
+}
+
+/* PHOTO DETAILS */
+
+.ml-photo-detail {
+  max-width: 800px;
+  margin: auto;
+}
+
+.ml-large-photo {
+  width: 100%;
+  min-height: 300px;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.ml-large-photo > span {
+  font-size: 105px;
+}
+
+.ml-photo-detail-info {
+  padding: 25px 5px;
+}
+
+.ml-photo-detail-info h1 {
+  color: #355c45;
+  font-size: 30px;
+}
+
+.ml-photo-detail-info > p {
+  color: #738078;
+  line-height: 1.7;
+}
+
+/* MEMORY PROMPT */
+
+.ml-memory-prompt {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  background: #e9f0e4;
+  border-radius: 18px;
+  padding: 20px;
+  margin: 25px 0;
+}
+
+.ml-memory-prompt > span {
+  font-size: 32px;
+}
+
+.ml-memory-prompt h3 {
+  margin: 0;
+  color: #42684e;
+}
+
+.ml-memory-prompt p {
+  margin-bottom: 0;
+  color: #718176;
+}
+
+.ml-demo-label {
+  display: block;
+  text-align: center;
+  color: #89948b;
+  margin: 12px 0 25px;
+}
+
+/* CAPTIONS */
+
+.ml-caption-title {
+  color: #405e49;
+  margin-bottom: 12px;
+}
+
+.ml-caption-input {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #dce5d9;
+  border-radius: 14px;
+  padding: 16px;
+  font-family: inherit;
+  font-size: 16px;
+  margin-bottom: 15px;
+  background: white;
+  color: #35483a;
+}
+
+.ml-saved-caption {
+  padding: 17px;
+  background: #edf3e9;
+  border-radius: 15px;
+  margin-top: 15px;
+}
+
+.ml-saved-caption p {
+  color: #526b58;
+}
+
+/* ACCESSIBILITY */
+
+.ml-module button:focus-visible,
+.ml-module textarea:focus-visible {
+  outline: 3px solid #8bb69a;
+  outline-offset: 3px;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 650px) {
+  .ml-module {
+    padding: 18px;
+  }
+
+  .ml-match-grid {
+    grid-template-columns: repeat(2, minmax(100px, 135px));
+    gap: 12px;
+  }
+
+  .ml-welcome {
+    padding: 20px;
+  }
+
+  .ml-welcome-emoji {
+    font-size: 42px;
+  }
+
+  .ml-routine-card {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .ml-routine-card strong {
+    font-size: 14px;
+  }
+
+  .ml-move-controls button {
+    width: 34px;
+    height: 36px;
+  }
+
+  .ml-large-photo {
+    min-height: 230px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ml-module *,
+  .ml-module *::before,
+  .ml-module *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
