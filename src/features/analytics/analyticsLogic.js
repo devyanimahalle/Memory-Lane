@@ -20,7 +20,7 @@ import { analyticsPatient, simulatedWeek } from "./analyticsData.js";
 export const THRESHOLDS = {
   baselinePerDay: analyticsPatient.usualEngagementPerDay, // 3
   lowEngagementDaysInARow: 2,
-  missedMedicinesPerDayAlert: 2
+  missedMedicinesPerDayAlert: 1
 };
 
 const REQUIRED_FIELDS = [
@@ -142,13 +142,13 @@ export function getTrend(dailySummaries) {
 export function getAlerts(dailySummaries) {
   const alerts = [];
 
-  // Alert 1: two or more missed medicines on a single complete day.
+  // Alert 1: one or more missed medicines on a single complete day.
   dailySummaries.forEach((d) => {
     if (d.isComplete && d.medicineMissed >= THRESHOLDS.missedMedicinesPerDayAlert) {
       alerts.push({
         type: "missed-medicine",
         date: d.date,
-        message: `Several medicine reminders were not confirmed on ${d.date}. Consider checking in with the patient.`
+        message: `One or more medicine reminders were not confirmed on ${d.date}. Consider checking in with the patient.`
       });
     }
   });

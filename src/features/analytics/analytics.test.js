@@ -101,10 +101,10 @@ test("two missed medicines in one day create a missed-medicine alert", () => {
   assert.equal(alerts.filter((a) => a.type === "missed-medicine").length, 1);
 });
 
-test("one missed medicine alone does not create an alert", () => {
+test("one missed medicine creates a missed-medicine alert", () => {
   const week = [makeDay("2026-10-29", { medicineConfirmed: 1 })];
   const alerts = getAlerts(getDailySummaries(week));
-  assert.equal(alerts.length, 0);
+  assert.equal(alerts.filter((a) => a.type === "missed-medicine").length, 1);
 });
 
 test("incomplete days never create missed-medicine alerts", () => {
@@ -124,7 +124,7 @@ test("demo week: 5 complete days, decreasing trend, 2 alerts", () => {
   assert.equal(s.weekly.totalEngagement, 17);
   assert.equal(s.weekly.medicinePercent, 70);
   assert.equal(s.trend, "decreasing");
-  assert.equal(s.alerts.length, 2);
+    assert.equal(s.alerts.length, 3);
 });
 
 test("alert wording is gentle and makes no diagnosis", () => {
