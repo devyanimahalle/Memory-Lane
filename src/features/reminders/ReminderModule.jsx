@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { initialReminders, initialEngagementEvents } from './reminderData';
 import './reminders.css';
 
@@ -123,10 +123,69 @@ function getPreferredVoice(lang = DEFAULT_VOICE_LANG) {
 }
 
 /**
+ * Conservative phrase matching for voice commands.
+ * Avoids accidental triggers from vague isolated words like "yes" or "done" alone.
+ * Supported commands:
+ * - "I've done this" / "I'm done"
+ * - "Remind me later" / "Snooze this"
+ * - "Read my reminders"
+ * - "Stop"
+ */
+function matchVoiceCommand(rawTranscript) {
+  if (!rawTranscript) return { command: 'unknown', raw: '' };
+
+  const clean = rawTranscript
+    .toLowerCase()
+    .trim()
+    .replace(/[.,!?;:'"’]/g, '')
+    .replace(/\s+/g, ' ');
+
+  // 1. Mark complete: strictly approved full phrases
+  if (
+    clean === 'ive done this' ||
+    clean === 'i have done this' ||
+    clean === 'im done' ||
+    clean === 'i am done'
+  ) {
+    return { command: 'complete', raw: rawTranscript };
+  }
+
+  // 2. Snooze: strictly approved full phrases
+  if (
+    clean === 'remind me later' ||
+    clean === 'snooze this' ||
+    clean === 'snooze'
+  ) {
+    return { command: 'snooze', raw: rawTranscript };
+  }
+
+  // 3. Read reminders aloud: strictly approved phrases
+  if (
+    clean === 'read my reminders' ||
+    clean === 'read my reminder' ||
+    clean === 'read reminders'
+  ) {
+    return { command: 'read', raw: rawTranscript };
+  }
+
+  // 4. Stop speech: strictly approved phrases
+  if (
+    clean === 'stop' ||
+    clean === 'stop playback' ||
+    clean === 'stop reading'
+  ) {
+    return { command: 'stop', raw: rawTranscript };
+  }
+
+  return { command: 'unrecognized', raw: rawTranscript };
+}
+
+/**
  * ReminderModule Component
  * 
  * Part of Memory Lane prototype (Member 2).
- * Handles patient reminders, daily routine timeline, voice reading, and caregiver event history.
+ * Handles patient reminders, daily routine timeline, text-to-speech,
+ * push-to-talk voice commands, and caregiver event history.
  * 
  * @param {Object} props
  * @param {Array} [props.reminders] - Array of Reminder objects. If omitted/undefined, falls back to mock data.
@@ -141,7 +200,6 @@ export default function ReminderModule({
   onEngagement
 }) {
   // Rule: Use mock data ONLY when props.reminders is omitted or undefined.
-  // An explicitly supplied empty array [] displays the empty state.
   const isPropProvided = reminders !== undefined && reminders !== null;
   const [items, setItems] = useState(() => {
     return isPropProvided ? reminders : initialReminders;
@@ -153,7 +211,7 @@ export default function ReminderModule({
     return isEventsPropProvided ? events : initialEngagementEvents;
   });
 
-  // Web Speech API state (Task 5)
+  // Task 5: Web Speech API - Text to Speech state
   const isSpeechSupported =
     typeof window !== 'undefined' &&
     'speechSynthesis' in window &&
@@ -162,6 +220,18 @@ export default function ReminderModule({
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [speakingReminderId, setSpeakingReminderId] = useState(null);
   const [isMuted, setIsMuted] = useState(false);
+
+  // Voice Commands - Push-to-Talk Speech Recognition state
+  const isRecognitionSupported =
+    typeof window !== 'undefined' &&
+    Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
+
+  const [isListening, setIsListening] = useState(false);
+  const [voiceTranscript, setVoiceTranscript] = useState('');
+  const [voiceFeedback, setVoiceFeedback] = useState('');
+  const [voiceFeedbackType, setVoiceFeedbackType] = useState('info'); // 'info' | 'success' | 'error'
+
+  const recognitionRef = useRef(null);
 
   // Synchronize state when parent passes updated props
   useEffect(() => {
@@ -179,9 +249,7 @@ export default function ReminderModule({
   // Handle asynchronous voice loading in browsers like Chrome
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      const handleVoicesChanged = () => {
-        // Voices list refreshed by OS/browser
-      };
+      const handleVoicesChanged = () => {};
       window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
       return () => {
         window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
@@ -189,22 +257,57 @@ export default function ReminderModule({
     }
   }, []);
 
-  // Cancel any ongoing speech when component unmounts
+  // Cleanup: Cancel any ongoing speech and abort speech recognition on unmount
   useEffect(() => {
     return () => {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch (e) {}
+      }
     };
   }, []);
+
+  /**
+   * Action: Stop speech immediately
+   */
+  const stopSpeaking = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsSpeaking(false);
+    setSpeakingReminderId(null);
+  };
+
+  /**
+   * Action: Stop speech recognition listening
+   */
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (e) {}
+      recognitionRef.current = null;
+    }
+    setIsListening(false);
+  };
 
   /**
    * Action: "Read reminder aloud"
    * Speaks reminder title and note at a calm, slightly slower rate (0.85).
    * Stops previous speech before starting a new one.
+   * Stops microphone listening if active to prevent audio feedback loop.
    */
   const speakReminder = (reminder) => {
     if (!isSpeechSupported || isMuted || !reminder) return;
+
+    // Rule 6: Prevent feedback loop - stop listening while speaking
+    if (isListening) {
+      stopListening();
+    }
 
     // Stop previous speech before playing new reminder
     window.speechSynthesis.cancel();
@@ -223,7 +326,7 @@ export default function ReminderModule({
 
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
     utterance.lang = DEFAULT_VOICE_LANG;
-    utterance.rate = 0.85; // Slightly slower, calm cadence for elderly comprehension
+    utterance.rate = 0.85; // Slower, calm cadence for elderly comprehension
     utterance.pitch = 1.0;
 
     const voice = getPreferredVoice(DEFAULT_VOICE_LANG);
@@ -247,17 +350,6 @@ export default function ReminderModule({
     };
 
     window.speechSynthesis.speak(utterance);
-  };
-
-  /**
-   * Action: Stop speech immediately
-   */
-  const stopSpeaking = () => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
-    setIsSpeaking(false);
-    setSpeakingReminderId(null);
   };
 
   /**
@@ -307,7 +399,7 @@ export default function ReminderModule({
       durationMinutes: 1
     };
 
-    // 4. Append to local caregiver event history (Task 7)
+    // 4. Append to local caregiver event history
     setEventList((prevEvents) => [engagementEvent, ...prevEvents]);
 
     // 5. Emit engagement event to parent callback
@@ -350,7 +442,7 @@ export default function ReminderModule({
       durationMinutes: 1
     };
 
-    // 4. Append to local caregiver event history (Task 7)
+    // 4. Append to local caregiver event history
     setEventList((prevEvents) => [engagementEvent, ...prevEvents]);
 
     // 5. Emit engagement event to parent callback
@@ -378,6 +470,136 @@ export default function ReminderModule({
 
   // 3. Prioritize genuinely upcoming pending reminder first; if none pending, earliest snoozed reminder
   const nextReminder = pendingReminders[0] || snoozedReminders[0] || null;
+
+  /**
+   * Dispatches recognized voice commands to existing handlers.
+   * Reuses handleMarkTaken, handleSnooze, speakReminder, and stopSpeaking without duplicating logic.
+   */
+  const processVoiceCommand = (rawTranscript) => {
+    const match = matchVoiceCommand(rawTranscript);
+
+    switch (match.command) {
+      case 'complete':
+        if (nextReminder) {
+          setVoiceFeedbackType('success');
+          setVoiceFeedback(`✓ Confirmed "${nextReminder.title}" as done.`);
+          handleMarkTaken(nextReminder);
+        } else {
+          setVoiceFeedbackType('info');
+          setVoiceFeedback('All reminders are already completed for today. Wonderful!');
+        }
+        break;
+
+      case 'snooze':
+        if (nextReminder) {
+          setVoiceFeedbackType('success');
+          setVoiceFeedback(`⏱ Snoozed "${nextReminder.title}" for a little while.`);
+          handleSnooze(nextReminder);
+        } else {
+          setVoiceFeedbackType('info');
+          setVoiceFeedback('No active reminders to snooze at this moment.');
+        }
+        break;
+
+      case 'read':
+        if (nextReminder) {
+          setVoiceFeedbackType('success');
+          setVoiceFeedback(`🔊 Reading reminder: "${nextReminder.title}".`);
+          speakReminder(nextReminder);
+        } else {
+          setVoiceFeedbackType('info');
+          setVoiceFeedback('No upcoming reminders to read. You are all caught up.');
+        }
+        break;
+
+      case 'stop':
+        setVoiceFeedbackType('info');
+        setVoiceFeedback('⏹ Stopped speech playback.');
+        stopSpeaking();
+        break;
+
+      default:
+        setVoiceFeedbackType('error');
+        setVoiceFeedback(
+          'Command not recognized. Please say: "I\'ve done this", "Remind me later", "Read my reminders", or "Stop".'
+        );
+        break;
+    }
+  };
+
+  /**
+   * Action: Start push-to-talk speech recognition
+   * Listens for a single command, then stops automatically.
+   */
+  const startListening = () => {
+    if (!isRecognitionSupported) return;
+
+    // Rule 6: If TTS is speaking, stop it before listening to avoid feedback loops
+    stopSpeaking();
+
+    setVoiceTranscript('');
+    setVoiceFeedback('');
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = DEFAULT_VOICE_LANG;
+      recognition.continuous = false; // Push-to-talk: single utterance
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        setVoiceFeedback('');
+      };
+
+      recognition.onresult = (event) => {
+        if (event.results && event.results.length > 0) {
+          const transcriptText = event.results[0][0].transcript;
+          setVoiceTranscript(transcriptText);
+          processVoiceCommand(transcriptText);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        setIsListening(false);
+        if (event.error === 'not-allowed') {
+          setVoiceFeedbackType('error');
+          setVoiceFeedback('Microphone permission was denied. You can use the buttons below.');
+        } else if (event.error === 'no-speech') {
+          setVoiceFeedbackType('info');
+          setVoiceFeedback('No speech was detected. Tap the button when you are ready to speak.');
+        } else {
+          setVoiceFeedbackType('info');
+          setVoiceFeedback('Voice listening stopped. You can tap again or use the buttons below.');
+        }
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      setIsListening(false);
+      setVoiceFeedbackType('error');
+      setVoiceFeedback('Could not start microphone. Buttons are available below.');
+    }
+  };
+
+  /**
+   * Action: Toggle push-to-talk listening
+   */
+  const toggleListening = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
 
   // Task 6: Daily Routine Timeline Grouping
   const morningReminders = todayReminders
@@ -552,7 +774,7 @@ export default function ReminderModule({
             </span>
           </div>
 
-          {/* Voice Reminder Controls (Task 5) */}
+          {/* Voice Reminder Controls (Task 5: TTS) */}
           <div className="ml-voice-section">
             {isSpeechSupported ? (
               <div className="ml-voice-controls">
@@ -589,6 +811,52 @@ export default function ReminderModule({
               </p>
             )}
           </div>
+
+          {/* Push-to-Talk Voice Commands Box */}
+          {isRecognitionSupported && (
+            <div className="ml-voice-command-box" role="region" aria-label="Voice Command Assistant">
+              <div className="ml-voice-command-header">
+                <span className="ml-voice-command-title">🎙️ Voice Commands</span>
+                <span className="ml-voice-command-hint">Tap below and speak</span>
+              </div>
+
+              <button
+                type="button"
+                className={`ml-btn ml-btn-mic ${isListening ? 'ml-btn-mic-active' : ''}`}
+                onClick={toggleListening}
+                aria-label={isListening ? 'Stop listening for voice commands' : 'Tap to speak a voice command'}
+              >
+                {isListening ? '🛑 Stop Listening' : '🎙️ Tap to Speak Command'}
+              </button>
+
+              {isListening && (
+                <div className="ml-voice-listening-status" aria-live="polite">
+                  <span className="ml-pulse-dot" aria-hidden="true"></span>
+                  Listening... Speak your command clearly.
+                </div>
+              )}
+
+              {voiceTranscript && (
+                <p className="ml-voice-transcript">
+                  <strong>Heard:</strong> "{voiceTranscript}"
+                </p>
+              )}
+
+              {voiceFeedback && (
+                <p className={`ml-voice-feedback ml-feedback-${voiceFeedbackType}`} role="status">
+                  {voiceFeedback}
+                </p>
+              )}
+
+              <div className="ml-voice-examples">
+                <span className="ml-examples-label">Say:</span>
+                <span className="ml-example-chip">"I've done this"</span>
+                <span className="ml-example-chip">"Remind me later"</span>
+                <span className="ml-example-chip">"Read my reminders"</span>
+                <span className="ml-example-chip">"Stop"</span>
+              </div>
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="ml-card-actions">
