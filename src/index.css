@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+/*
+ * Memory Lane design tokens (Lead-owned; see DESIGN.md).
+ * "Mint Daylight": soft white and soft mint are primary; turquoise, navy and
+ * deep teal are secondary. Contrast ratios are noted for text pairings.
+ * System fonts only (font choice is still open).
+ */
+@theme {
+  /* Surfaces: soft white page, white cards, mint wash */
+  --color-canvas: #f7fbfa;
+  --color-surface: #ffffff;
+  --color-sunken: #e3f4ee; /* soft mint */
+  --color-line: #cfe5dc;
+  --color-line-strong: #4f7a70; /* 4.6:1 on canvas: control borders */
+
+  /* Text: navy ink */
+  --color-ink: #12293a; /* 14.3:1 on canvas */
+  --color-ink-soft: #364c5e; /* 8.6:1 on canvas, 7.8:1 on mint */
+  --color-ink-faint: #51657a; /* 5.8:1 on canvas: caregiver meta text only */
+
+  /* Accent: deep turquoise for primary actions */
+  --color-accent: #08565d; /* 8.1:1 on canvas */
+  --color-accent-strong: #07444a; /* hover/pressed */
+  --color-accent-soft: #d6f0ee;
+  --color-on-accent: #ffffff; /* 8.4:1 on accent */
+  --color-turquoise: #0e9ba0; /* decorative marks and rings, 3.2:1+ on canvas */
+
+  /* Deep teal: caregiver analytics and strong panels */
+  --color-deep: #0e3a44;
+  --color-on-deep: #f2fbf9; /* 11.7:1 on deep */
+  --color-on-deep-soft: #bfe0dd; /* 8.7:1 on deep */
+
+  /* Gentle: done / positive */
+  --color-gentle: #2a6e47;
+  --color-gentle-ink: #1b4a30; /* 8.6:1 on gentle-soft */
+  --color-gentle-soft: #ddf2e3;
+  --color-on-gentle: #ffffff; /* 6.1:1 on gentle */
+
+  /* Attention: muted amber for caregiver alerts (no alarm red) */
+  --color-attention: #8a5300; /* 6.1:1 on canvas */
+  --color-attention-ink: #6b4000; /* 7.6:1 on attention-soft */
+  --color-attention-soft: #fbeccb;
+
+  /* Category tints: ink text reaches 12:1, ink-soft 7.2:1 or better */
+  --color-tint-sage: #ddf0e4;
+  --color-tint-sky: #dcebf7;
+  --color-tint-peach: #fbe3d6;
+  --color-tint-butter: #f8edc6;
+
+  /* Focus ring */
+  --color-focus: #1b4f9c; /* 7.6:1 on canvas */
+
+  /* Chart series (Recharts, later): distinct by hue and lightness */
+  --color-chart-1: #08565d;
+  --color-chart-2: #b0651a;
+  --color-chart-3: #5b4b8a;
+  --color-chart-4: #2a6e47;
+
+  /* Typography: Figtree for body and interface text, Oswald for headings and titles
+     (self-hosted variable fonts imported in src/main.jsx; system fallbacks kept) */
+  --font-sans:
+    "Figtree Variable", ui-rounded, "Segoe UI", system-ui, -apple-system,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "Oswald Variable", "Arial Narrow", Impact, sans-serif;
+
+  /* Type scale. Patient: lead/title/display. Caregiver: caption/body. */
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.5;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-lead: 1.25rem; /* patient body text, 20px */
+  --text-lead--line-height: 1.6;
+  --text-title: 2rem; /* patient headings, 32px */
+  --text-title--line-height: 1.25;
+  --text-display: 2.75rem; /* greeting, time, date */
+  --text-display--line-height: 1.15;
+  --text-display--font-weight: 700;
+  --text-section: 2.5rem; /* Games and Memory Album section titles, 40px */
+  --text-section--line-height: 1.15;
+
+  --leading-calm: 1.6;
+  --tracking-calm: 0.005em;
+
+  /* Spacing: Tailwind's 0.25rem base is kept; named sizes for touch targets */
+  --spacing-touch: 2.75rem; /* 44px caregiver minimum */
+  --spacing-touch-lg: 3.5rem; /* 56px patient minimum */
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-lg: 2.5rem;
+
+  /* Radii: generous and soft */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+
+  /* Shadows: surfaces separate by tone; resting shadow is barely there,
+     --shadow-raised is for things that truly float (sheets, menus) */
+  --shadow-soft: 0 1px 2px rgb(18 41 58 / 0.05);
+  --shadow-card: 0 1px 3px rgb(18 41 58 / 0.06);
+  --shadow-raised:
+    0 4px 8px rgb(18 41 58 / 0.07), 0 16px 40px rgb(18 41 58 / 0.14);
+
+  /* Motion: slow and gentle (see DESIGN.md) */
+  --ease-gentle: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-quick: 200ms;
+  --duration-gentle: 300ms;
+  --duration-slow: 400ms;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: var(--leading-calm);
+    letter-spacing: var(--tracking-calm);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
