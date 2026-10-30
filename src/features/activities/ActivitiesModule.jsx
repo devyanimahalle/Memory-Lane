@@ -1,35 +1,30 @@
-
 import React, { useState, useEffect, useRef } from "react";
-
-import {
-  matchingItems,
-  memoryPhotos
-} from "./activityData";
-
+import { matchingItems } from "./activityData";
 import FindDifference from "./games/FindDifference/FindDifference";
 import PicturePuzzle from "./games/PicturePuzzle/PicturePuzzle";
-
+import { playGentleChime, playCelebrationChime } from "./soundEffects";
 import "./activities.css";
+
 const createEventId = () =>
   globalThis.crypto?.randomUUID?.() ||
   `event-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-export default function ActivitiesModule({ onEngagement }) {
-  const [screen, setScreen] = useState("home");
+const CARD_DIFFICULTY_OPTIONS = [
+  { id: "4", label: "4 Cards (2 Pairs)", pairs: 2, cols: 2, maxGridWidth: 380 },
+  { id: "8", label: "8 Cards (4 Pairs)", pairs: 4, cols: 4, maxGridWidth: 640 },
+  { id: "12", label: "12 Cards (6 Pairs)", pairs: 6, cols: 4, maxGridWidth: 760 },
+  { id: "16", label: "16 Cards (8 Pairs)", pairs: 8, cols: 4, maxGridWidth: 840 }
+];
 
-  // Matching game states
+export default function ActivitiesModule({ onEngagement }) {
+  const [screen, setScreen] = useState("home"); // "home", "matching", "findDifference", "picturePuzzle"
+
+  // Matching game difficulty & card count
+  const [selectedDifficulty, setSelectedDifficulty] = useState(CARD_DIFFICULTY_OPTIONS[2]); // Default 12 Cards (6 Pairs)
   const [cards, setCards] = useState([]);
   const [selected, setSelected] = useState([]);
   const [matched, setMatched] = useState([]);
   const [gameMessage, setGameMessage] = useState("");
-
-  // Memory album states
-  const [category, setCategory] = useState("All");
-  const [photo, setPhoto] = useState(null);
-  const [caption, setCaption] = useState("");
-  const [savedCaption, setSavedCaption] = useState("");
-  const [captionMessage, setCaptionMessage] = useState("");
-  const [speaking, setSpeaking] = useState(false);
 
   const mismatchTimer = useRef(null);
   const activityStart = useRef(Date.now());
@@ -47,9 +42,7 @@ export default function ActivitiesModule({ onEngagement }) {
       occurredAt: new Date().toISOString(),
       durationMinutes: Math.max(
         1,
-        Math.round(
-          (Date.now() - activityStart.current) / 60000
-        )
+        Math.round((Date.now() - activityStart.current) / 60000)
       )
     });
   };
@@ -62,37 +55,40 @@ export default function ActivitiesModule({ onEngagement }) {
   // Navigation
   const goHome = () => {
     clearTimeout(mismatchTimer.current);
-
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-
-    setSpeaking(false);
     setScreen("home");
   };
 
   // =====================================
-  // GAME 1: MATCH FAMILIAR PAIRS
+  // GAME 1: MATCH FAMILIAR PAIRS (REAL PHOTOS)
   // =====================================
 
-  const startMatching = () => {
-    const shuffledCards = [...matchingItems, ...matchingItems]
+  const setupDeckForPairs = (pairCount) => {
+    const shuffledItems = [...matchingItems].sort(() => Math.random() - 0.5);
+    const chosenItems = shuffledItems.slice(0, pairCount);
+
+    const deck = [...chosenItems, ...chosenItems]
       .map((item, index) => ({
         ...item,
         cardId: `${item.id}-${index}`
       }))
       .sort(() => Math.random() - 0.5);
 
-    setCards(shuffledCards);
+    setCards(deck);
     setSelected([]);
     setMatched([]);
+    setGameMessage("Take your time. Tap a card to turn it over.");
+  };
 
-    setGameMessage(
-      "Take your time. Find two matching pictures."
-    );
-
+  const startMatching = (diff = selectedDifficulty) => {
+    setupDeckForPairs(diff.pairs);
     startActivity();
     setScreen("matching");
+  };
+
+  const handleDifficultyChange = (newDiff) => {
+    clearTimeout(mismatchTimer.current);
+    setSelectedDifficulty(newDiff);
+    setupDeckForPairs(newDiff.pairs);
   };
 
   const selectCard = (card) => {
@@ -100,7 +96,7 @@ export default function ActivitiesModule({ onEngagement }) {
       selected.length >= 2 ||
       selected.includes(card.cardId) ||
       matched.includes(card.id) ||
-      matched.length === matchingItems.length
+      matched.length === selectedDifficulty.pairs
     ) {
       return;
     }
@@ -109,53 +105,36 @@ export default function ActivitiesModule({ onEngagement }) {
     setSelected(newSelected);
 
     if (newSelected.length === 2) {
-      const firstCard = cards.find(
-        item => item.cardId === newSelected[0]
-      );
-
-      const secondCard = cards.find(
-        item => item.cardId === newSelected[1]
-      );
+      const firstCard = cards.find((item) => item.cardId === newSelected[0]);
+      const secondCard = cards.find((item) => item.cardId === newSelected[1]);
 
       if (firstCard.id === secondCard.id) {
         const newMatched = [...matched, firstCard.id];
-
         setMatched(newMatched);
         setSelected([]);
 
-        if (newMatched.length === matchingItems.length) {
-          setGameMessage(
-            "Beautifully done! Thank you for playing."
-          );
-
+        if (newMatched.length === selectedDifficulty.pairs) {
+          playCelebrationChime();
+          setGameMessage("Beautifully done! You found all the matching pairs.");
           if (!completionSent.current) {
             completionSent.current = true;
-
-            emitEvent(
-              "game",
-              "completed",
-              "Played familiar pairs"
-            );
+            emitEvent("game", "completed", `Played familiar pairs (${selectedDifficulty.label})`);
           }
         } else {
-          setGameMessage(
-            "Wonderful! You found a pair."
-          );
+          playGentleChime();
+          setGameMessage(`Wonderful! You matched the ${firstCard.name}.`);
         }
       } else {
-        setGameMessage(
-          "That's okay. Let's try another one."
-        );
-
+        setGameMessage("That's okay. Let's try another one.");
         mismatchTimer.current = setTimeout(() => {
           setSelected([]);
-        }, 1000);
+        }, 1100);
       }
     }
   };
 
   const matchingComplete =
-    matched.length === matchingItems.length;
+    matched.length === selectedDifficulty.pairs && selectedDifficulty.pairs > 0;
 
   // =====================================
   // GAME 2: FIND THE DIFFERENCE
@@ -169,12 +148,7 @@ export default function ActivitiesModule({ onEngagement }) {
   const completeFindDifference = () => {
     if (!completionSent.current) {
       completionSent.current = true;
-
-      emitEvent(
-        "game",
-        "completed",
-        "Played Find the Difference"
-      );
+      emitEvent("game", "completed", "Played Find the Difference");
     }
   };
 
@@ -190,284 +164,109 @@ export default function ActivitiesModule({ onEngagement }) {
   const completePicturePuzzle = () => {
     if (!completionSent.current) {
       completionSent.current = true;
-
-      emitEvent(
-        "game",
-        "completed",
-        "Played Picture Puzzle"
-      );
+      emitEvent("game", "completed", "Played Picture Puzzle");
     }
-  };
-
-  // =====================================
-  // MEMORY ALBUM
-  // =====================================
-
-  const categories = [
-    "All",
-    "Nature & Gardens",
-    "Celebrations",
-    "Everyday Life"
-  ];
-
-  const filteredPhotos = memoryPhotos.filter(
-    item =>
-      category === "All" ||
-      item.category === category
-  );
-
-  const openPhoto = (item) => {
-    setPhoto(item);
-    setCaption("");
-    setSavedCaption("");
-    setCaptionMessage("");
-
-    activityStart.current = Date.now();
-    completionSent.current = false;
-
-    setScreen("photo");
-
-    emitEvent(
-      "memory",
-      "viewed",
-      `Viewed ${item.title}`
-    );
-  };
-
-  const playVoicePrompt = () => {
-    if (!("speechSynthesis" in window)) {
-      setCaptionMessage(
-        "Voice prompts are not supported in this browser."
-      );
-      return;
-    }
-
-    window.speechSynthesis.cancel();
-
-    const speech = new SpeechSynthesisUtterance(
-      "Take your time. Would you like to share something about this picture?"
-    );
-
-    speech.rate = 0.85;
-    speech.pitch = 1;
-
-    speech.onend = () => setSpeaking(false);
-    speech.onerror = () => setSpeaking(false);
-
-    window.speechSynthesis.speak(speech);
-    setSpeaking(true);
-
-    emitEvent(
-      "memory",
-      "played",
-      "Played sample voice prompt"
-    );
-  };
-
-  const stopVoicePrompt = () => {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-
-    setSpeaking(false);
-  };
-
-  const saveCaption = () => {
-    if (!caption.trim()) {
-      setCaptionMessage(
-        "Please write something first."
-      );
-      return;
-    }
-
-    setSavedCaption(caption.trim());
-
-    setCaptionMessage(
-      "Your reflection has been saved for this session."
-    );
-  };
-
-  const backToAlbum = () => {
-    stopVoicePrompt();
-    setScreen("album");
   };
 
   // Cleanup
   useEffect(() => {
     return () => {
       clearTimeout(mismatchTimer.current);
-
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
     };
   }, []);
 
-  // =====================================
-  // MAIN UI
-  // =====================================
-
   return (
     <div className="ml-module">
-
-      {/* ACTIVITIES HOME */}
-
+      {/* ACTIVITIES HOME (LANDSCAPE 3-GAME GRID WITH REAL PHOTOGRAPHY) */}
       {screen === "home" && (
         <section>
-
           <div className="ml-heading">
-            <span className="ml-eyebrow">
-              A LITTLE TIME FOR YOU
-            </span>
-
-            <h1>Moments of Joy 🌿</h1>
-
-            <p>
-              Enjoy a few gentle activities at your own pace.
-            </p>
+            <span className="ml-eyebrow">A LITTLE TIME FOR YOU</span>
+            <h1>Moments of Joy</h1>
+            <p>Enjoy gentle, peaceful activities designed for cognitive wellness.</p>
           </div>
 
           <div className="ml-welcome">
-            <div>
+            <div className="ml-welcome-text">
               <span>YOUR HAPPY SPACE</span>
-
               <h2>Every moment is special.</h2>
-
-              <p>
-                Let's enjoy something lovely today.
-              </p>
+              <p>Relax, take your time, and enjoy something lovely today.</p>
             </div>
-
-            <span className="ml-welcome-emoji">
-              🌼
-            </span>
+            <div className="ml-welcome-accent">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b694c" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+              </svg>
+            </div>
           </div>
 
-          <h2 className="ml-section-title">
-            Choose an activity
-          </h2>
+          <h2 className="ml-section-title">Choose an activity</h2>
 
           <div className="ml-activity-grid">
-
             {/* MATCH FAMILIAR PAIRS */}
-
             <button
               className="ml-activity-card ml-card-green"
-              onClick={startMatching}
+              onClick={() => startMatching(selectedDifficulty)}
+              type="button"
             >
-              <span className="ml-card-emoji">
-                🧩
-              </span>
-
-              <span className="ml-card-label">
-                ACTIVITY 01
-              </span>
-
+              <div className="ml-card-thumb">
+                <img
+                  src="/images/covers/matching_cover.jpg"
+                  alt="Match Familiar Pairs preview"
+                  className="ml-card-photo"
+                  loading="lazy"
+                />
+              </div>
+              <span className="ml-card-label">ACTIVITY 01</span>
               <h3>Match Familiar Pairs</h3>
-
-              <p>
-                Let's find matching pictures together.
-              </p>
-
-              <span className="ml-card-action">
-                Let's play →
-              </span>
+              <p>Discover matching pairs of familiar, comforting photographs. Choose from 4, 8, 12, or 16 cards.</p>
+              <span className="ml-card-action">Let's play →</span>
             </button>
 
             {/* FIND THE DIFFERENCE */}
-
             <button
               className="ml-activity-card ml-card-peach"
               onClick={startFindDifference}
+              type="button"
             >
-              <span className="ml-card-emoji">
-                🔍
-              </span>
-
-              <span className="ml-card-label">
-                BRAIN GAME 02
-              </span>
-
-              <h3>Find the Difference</h3>
-
-              <p>
-                Look carefully and discover what's changed.
-              </p>
-
-              <span className="ml-card-action">
-                Let's play →
-              </span>
+              <div className="ml-card-thumb">
+                <img
+                  src="/images/find-difference/woodland_a.png"
+                  alt="Spot the Difference preview"
+                  className="ml-card-photo"
+                  loading="lazy"
+                />
+              </div>
+              <span className="ml-card-label">BRAIN GAME 02</span>
+              <h3>Spot the Difference</h3>
+              <p>Compare authentic printable puzzle scenes side-by-side and discover natural differences.</p>
+              <span className="ml-card-action">Let's play →</span>
             </button>
 
             {/* PICTURE PUZZLE */}
-
             <button
               className="ml-activity-card ml-card-lavender"
               onClick={startPicturePuzzle}
+              type="button"
             >
-              <span className="ml-card-emoji">
-                🧩
-              </span>
-
-              <span className="ml-card-label">
-                BRAIN GAME 03
-              </span>
-
+              <div className="ml-card-thumb">
+                <img
+                  src="/images/covers/puzzle_cover.jpg"
+                  alt="Picture Puzzle preview"
+                  className="ml-card-photo"
+                  loading="lazy"
+                />
+              </div>
+              <span className="ml-card-label">BRAIN GAME 03</span>
               <h3>Picture Puzzle</h3>
-
-              <p>
-                Put the picture pieces together.
-              </p>
-
-              <span className="ml-card-action">
-                Let's play →
-              </span>
+              <p>Assemble beautiful landscape photograph pieces into a complete picture. Choose 4, 6, 9, or 12 pieces.</p>
+              <span className="ml-card-action">Let's play →</span>
             </button>
-
-            {/* MEMORY ALBUM */}
-
-            <button
-              className="ml-activity-card ml-card-lavender"
-              onClick={() => setScreen("album")}
-            >
-              <span className="ml-card-emoji">
-                📸
-              </span>
-
-              <span className="ml-card-label">
-                SPECIAL MOMENTS
-              </span>
-
-              <h3>Memory Album</h3>
-
-              <p>
-                Explore pictures and share your thoughts.
-              </p>
-
-              <span className="ml-card-action">
-                View album →
-              </span>
-            </button>
-
           </div>
-
-          <div className="ml-joy-note">
-            <span>💚</span>
-
-            <div>
-              <strong>A little moment of joy</strong>
-
-              <p>
-                Take your time. There is no hurry.
-              </p>
-            </div>
-          </div>
-
         </section>
       )}
 
-      {/* FIND THE DIFFERENCE SCREEN */}
-
+      {/* FIND THE DIFFERENCE (LANDSCAPE REAL IMAGES) */}
       {screen === "findDifference" && (
         <FindDifference
           onBack={goHome}
@@ -475,8 +274,7 @@ export default function ActivitiesModule({ onEngagement }) {
         />
       )}
 
-      {/* PICTURE PUZZLE SCREEN */}
-
+      {/* PICTURE PUZZLE (LANDSCAPE REAL PHOTO TILES) */}
       {screen === "picturePuzzle" && (
         <PicturePuzzle
           onBack={goHome}
@@ -484,291 +282,147 @@ export default function ActivitiesModule({ onEngagement }) {
         />
       )}
 
-      {/* MATCHING GAME */}
-
+      {/* MATCH FAMILIAR PAIRS (LANDSCAPE REAL PHOTOGRAPHY GRID) */}
       {screen === "matching" && (
-        <section>
-
-          <button
-            className="ml-back"
-            onClick={goHome}
-          >
+        <section className="ml-matching-section">
+          <button className="ml-back" onClick={goHome} type="button">
             ← Back to Activities
           </button>
 
           <div className="ml-game-heading">
-
-            <span className="ml-eyebrow">
-              ACTIVITY 01
-            </span>
-
-            <h1>Let's Match Together! 🧩</h1>
-
-            <p>
-              Find two pictures that look the same.
-            </p>
-
+            <span className="ml-eyebrow">MEMORY &amp; FOCUS GAME</span>
+            <h1>Match Familiar Pairs</h1>
+            <p>Tap a card to turn it over, then find its matching photograph.</p>
           </div>
 
-          <div className="ml-match-grid">
+          {/* Card Count / Difficulty Selector */}
+          <div className="ml-control-row">
+            <span className="ml-control-label">Number of Cards:</span>
+            <div className="ml-selector-pills">
+              {CARD_DIFFICULTY_OPTIONS.map((opt) => (
+                <button
+                  key={opt.id}
+                  className={`ml-pill-btn ${selectedDifficulty.id === opt.id ? "active" : ""}`}
+                  onClick={() => handleDifficultyChange(opt)}
+                  type="button"
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-            {cards.map(card => {
-              const revealed =
-                selected.includes(card.cardId) ||
-                matched.includes(card.id);
+          {/* Progress / Status Bar */}
+          <div className="ml-matching-status">
+            <div className="ml-stat-badge">
+              <span>Pairs Matched:</span>
+              <strong>{matched.length} / {selectedDifficulty.pairs}</strong>
+            </div>
+            <button
+              className="ml-reshuffle-btn"
+              onClick={() => setupDeckForPairs(selectedDifficulty.pairs)}
+              type="button"
+            >
+              Deal New Cards
+            </button>
+          </div>
+
+          <p className="ml-game-message">{gameMessage}</p>
+
+          {/* Cards Grid */}
+          <div
+            className="ml-match-grid"
+            style={{
+              gridTemplateColumns: `repeat(${selectedDifficulty.cols}, 1fr)`,
+              maxWidth: `${selectedDifficulty.maxGridWidth}px`
+            }}
+          >
+            {cards.map((card) => {
+              const isSelected = selected.includes(card.cardId);
+              const isMatched = matched.includes(card.id);
+              const isRevealed = isSelected || isMatched;
 
               return (
                 <button
                   key={card.cardId}
-                  className={`ml-match-card ${
-                    revealed ? "revealed" : ""
-                  } ${
-                    matched.includes(card.id)
-                      ? "matched"
-                      : ""
+                  className={`ml-match-card ${isRevealed ? "revealed" : ""} ${
+                    isMatched ? "matched" : ""
                   }`}
                   onClick={() => selectCard(card)}
-                  disabled={
-                    revealed ||
-                    selected.length === 2 ||
-                    matchingComplete
-                  }
-                  aria-label={
-                    revealed
-                      ? card.name
-                      : "Hidden picture"
-                  }
+                  aria-label={isRevealed ? card.name : "Hidden photograph card, tap to turn"}
+                  type="button"
                 >
-
-                  {revealed ? (
-                    <>
-                      <span>{card.emoji}</span>
-                      <small>{card.name}</small>
-                    </>
+                  {isRevealed ? (
+                    <div className="ml-card-front">
+                      <div className="ml-match-img-wrapper">
+                        <img
+                          src={card.image}
+                          alt={card.name}
+                          className="ml-match-photo"
+                        />
+                      </div>
+                      <strong className="ml-card-name">{card.name}</strong>
+                    </div>
                   ) : (
-                    <span className="ml-hidden-card">
-                      ✿
-                    </span>
+                    <div className="ml-card-back">
+                      <div className="ml-card-emblem">
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#527e61"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                          <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                        </svg>
+                      </div>
+                      <small className="ml-card-tap-hint">Tap to flip</small>
+                    </div>
                   )}
-
                 </button>
               );
             })}
-
-          </div>
-
-          <div className="ml-feedback">
-            {gameMessage}
           </div>
 
           {matchingComplete && (
-            <div className="ml-complete">
-
-              <span>🌸</span>
-
-              <h2>Beautifully done!</h2>
-
-              <p>
-                Thank you for spending this time with us.
-              </p>
-
-              <button
-                onClick={startMatching}
-                className="ml-primary-btn"
-              >
-                Play Again
-              </button>
-
+            <div className="ml-completion-box">
+              <h2>Wonderful! You matched them all!</h2>
+              <p>Thank you for taking this peaceful time with us.</p>
+              <div className="ml-completion-actions">
+                <button
+                  onClick={() => setupDeckForPairs(selectedDifficulty.pairs)}
+                  className="ml-primary-btn"
+                  type="button"
+                >
+                  Play Another Round
+                </button>
+                {selectedDifficulty.id !== "16" && (
+                  <button
+                    onClick={() => {
+                      const nextIndex = CARD_DIFFICULTY_OPTIONS.findIndex(o => o.id === selectedDifficulty.id) + 1;
+                      if (nextIndex < CARD_DIFFICULTY_OPTIONS.length) {
+                        handleDifficultyChange(CARD_DIFFICULTY_OPTIONS[nextIndex]);
+                      }
+                    }}
+                    className="ml-secondary-btn"
+                    type="button"
+                  >
+                    Try More Cards →
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
-          <button
-            className="ml-secondary-btn"
-            onClick={goHome}
-          >
+          <button className="ml-secondary-btn" onClick={goHome} type="button">
             Done for Now
           </button>
-
         </section>
       )}
-
-      {/* MEMORY ALBUM */}
-
-      {screen === "album" && (
-        <section>
-
-          <button
-            className="ml-back"
-            onClick={goHome}
-          >
-            ← Back to Activities
-          </button>
-
-          <div className="ml-game-heading">
-
-            <span className="ml-eyebrow">
-              YOUR SPECIAL COLLECTION
-            </span>
-
-            <h1>Beautiful Memories 📸</h1>
-
-            <p>
-              A little collection of familiar moments.
-            </p>
-
-          </div>
-
-          <div className="ml-category-list">
-
-            {categories.map(cat => (
-              <button
-                key={cat}
-                className={
-                  category === cat ? "active" : ""
-                }
-                onClick={() => setCategory(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-
-          </div>
-
-          <div className="ml-photo-grid">
-
-            {filteredPhotos.map(item => (
-              <button
-                key={item.id}
-                className="ml-photo-card"
-                onClick={() => openPhoto(item)}
-              >
-
-                <div
-                  className="ml-photo-placeholder"
-                  style={{ background: item.color }}
-                >
-                  <span>{item.emoji}</span>
-                  <small>Sample image</small>
-                </div>
-
-                <div className="ml-photo-info">
-                  <strong>{item.title}</strong>
-                  <span>{item.category}</span>
-                </div>
-
-              </button>
-            ))}
-
-          </div>
-
-        </section>
-      )}
-
-      {/* PHOTO DETAIL */}
-
-      {screen === "photo" && photo && (
-        <section>
-
-          <button
-            className="ml-back"
-            onClick={backToAlbum}
-          >
-            ← Back to Album
-          </button>
-
-          <div className="ml-photo-detail">
-
-            <div
-              className="ml-large-photo"
-              style={{ background: photo.color }}
-            >
-              <span>{photo.emoji}</span>
-              <small>Sample image placeholder</small>
-            </div>
-
-            <div className="ml-photo-detail-info">
-
-              <span className="ml-eyebrow">
-                {photo.category}
-              </span>
-
-              <h1>{photo.title}</h1>
-
-              <p>{photo.caption}</p>
-
-              <div className="ml-memory-prompt">
-
-                <span>💭</span>
-
-                <div>
-                  <h3>Let's share a moment</h3>
-
-                  <p>
-                    Would you like to tell me about this day?
-                  </p>
-                </div>
-
-              </div>
-
-              <button
-                className="ml-primary-btn"
-                onClick={
-                  speaking
-                    ? stopVoicePrompt
-                    : playVoicePrompt
-                }
-              >
-                {speaking
-                  ? "■ Stop Voice Prompt"
-                  : "🔊 Play Voice Prompt"}
-              </button>
-
-              <small className="ml-demo-label">
-                Demo voice prompt · Uses your browser's
-                speech feature
-              </small>
-
-              <h3 className="ml-caption-title">
-                Your thoughts
-              </h3>
-
-              <textarea
-                className="ml-caption-input"
-                placeholder="Write something you'd like to remember..."
-                value={caption}
-                onChange={e => {
-                  setCaption(e.target.value);
-                  setCaptionMessage("");
-                }}
-                rows={3}
-              />
-
-              <button
-                className="ml-primary-btn"
-                onClick={saveCaption}
-              >
-                Save Caption
-              </button>
-
-              {captionMessage && (
-                <p className="ml-feedback">
-                  {captionMessage}
-                </p>
-              )}
-
-              {savedCaption && (
-                <div className="ml-saved-caption">
-                  <strong>Your saved reflection</strong>
-                  <p>{savedCaption}</p>
-                </div>
-              )}
-
-            </div>
-          </div>
-
-        </section>
-      )}
-
     </div>
   );
 }

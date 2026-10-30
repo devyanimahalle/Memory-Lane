@@ -1,72 +1,376 @@
+/* Spot the Difference Game - Natural Puzzle Comparison Styling */
 
 .difference-game {
-  max-width: 1000px;
-  margin: 30px auto;
-  padding: 25px;
+  max-width: 1100px;
+  margin: 10px auto 40px;
+  padding: 20px;
   text-align: center;
   color: #24443d;
+  font-family: inherit;
 }
 
-.difference-game h1 {
-  font-size: 32px;
-  margin: 20px 0;
+.fd-back-btn {
+  background: #eaf3ec;
+  color: #2b6147;
+  border: 1px solid #c7e1ce;
+  border-radius: 14px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
+.fd-back-btn:hover {
+  background: #d8ebdd;
+  transform: translateY(-1px);
+}
+
+.fd-printable-banner {
+  background: #a3d9bc;
+  border-radius: 18px;
+  padding: 16px 24px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 14px rgba(35, 75, 55, 0.10);
+}
+
+.fd-printable-banner h1 {
+  font-size: clamp(26px, 4vw, 36px);
+  color: #17422f;
+  margin: 6px 0;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.fd-instruction {
+  font-size: 16px;
+  color: #1d4d38;
+  font-weight: 700;
+  margin: 6px 0 0;
+  letter-spacing: 0.2px;
+}
+
+.fd-footer-note {
+  margin-top: 25px;
+  padding: 12px;
+  font-size: 13px;
+  color: #5d7568;
+  border-top: 1px solid #d8e5dc;
+}
+
+.fd-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #26593f;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 4px;
+}
+
+/* Scene Selector Tabs */
+.fd-scene-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0 25px;
+}
+
+.fd-scene-tab {
+  background: #f0f6f1;
+  color: #3b5c4b;
+  border: 2px solid #cfe2d5;
+  border-radius: 16px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fd-scene-tab:hover {
+  background: #e3efe6;
+  border-color: #a8cfb4;
+}
+
+.fd-scene-tab.active {
+  background: #2b7050;
+  color: white;
+  border-color: #245e43;
+  box-shadow: 0 4px 12px rgba(43, 112, 80, 0.25);
+}
+
+/* Side-by-Side Images */
 .difference-images {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin: 30px 0;
+  gap: 22px;
+  margin: 25px 0;
 }
 
-.scene {
-  background: #e8f5e9;
-  border: 3px solid #b7d8c4;
-  border-radius: 18px;
-  padding: 30px 10px;
+.photo-panel {
+  background: #ffffff;
+  border: 3px solid #cfe2d5;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(33, 66, 49, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: relative;
   cursor: crosshair;
-  min-height: 220px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.photo-panel:hover {
+  border-color: #7ab890;
+  box-shadow: 0 10px 28px rgba(33, 66, 49, 0.12);
+}
+
+.photo-label {
+  background: #e8f3ec;
+  color: #27563f;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-bottom: 2px solid #cfe2d5;
+}
+
+.photo-label.highlight {
+  background: #d8eedf;
+  color: #1a5c39;
+}
+
+.photo-container {
+  position: relative;
+  width: 100%;
+  background: #f4f7f5;
+  overflow: hidden;
+  user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.garden {
-  font-size: 35px;
-  line-height: 2;
+.photo-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
 }
 
-.difference-game button {
-  background: #39866b;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 13px 22px;
-  margin: 8px;
-  font-size: 16px;
-  cursor: pointer;
+/* Gentle Hint Guide Pulse */
+.hint-spot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 5;
 }
 
-.difference-game button:hover {
-  background: #28664f;
+.hint-pulse {
+  display: block;
+  width: 72px;
+  height: 72px;
+  border: 3px dashed #f59e0b;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.22);
+  animation: pulseHint 1.2s ease-in-out infinite;
+}
+
+@keyframes pulseHint {
+  0%, 100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 14px rgba(245, 158, 11, 0.65);
+  }
+}
+
+/* Found Discovery Marker Ring */
+.found-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+.marker-ring {
+  width: 64px;
+  height: 64px;
+  border: 4px solid #10b981;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.24);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 6px 16px rgba(0, 0, 0, 0.35);
+  animation: foundRingExpand 0.4s ease-out;
+}
+
+@keyframes foundRingExpand {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.marker-tag {
+  background: #065f46;
+  color: #ecfdf5;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 10px;
+  margin-top: 5px;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  border: 1.5px solid #34d399;
+}
+
+/* Status & Feedback Box */
+.fd-status-box {
+  background: #ffffff;
+  border: 2px solid #cfe2d5;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 25px auto;
+  max-width: 650px;
+  box-shadow: 0 6px 18px rgba(35, 75, 52, 0.05);
+}
+
+.fd-count {
+  font-size: 19px;
+  color: #244b36;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.fd-count strong {
+  color: #10b981;
+  font-size: 24px;
 }
 
 .progress-track {
-  height: 12px;
-  background: #dce9df;
+  height: 14px;
+  background: #e2ede5;
   border-radius: 20px;
   overflow: hidden;
-  margin: 15px 0;
+  margin: 12px 0;
+  border: 1px solid #c7ddce;
 }
 
 .progress-fill {
   height: 100%;
-  background: #39866b;
-  transition: width 0.3s;
+  background: linear-gradient(90deg, #3bb37a, #10b981);
+  border-radius: 20px;
+  transition: width 0.4s ease;
 }
 
-@media (max-width: 600px) {
+.fd-message-banner {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 2px solid #a7f3d0;
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-top: 15px;
+  font-size: 17px;
+  font-weight: 700;
+  animation: fadeIn 0.3s ease;
+}
+
+.fd-hint-banner {
+  background: #fffbeb;
+  color: #92400e;
+  border: 2px solid #fde68a;
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-top: 15px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Action Buttons */
+.fd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 25px;
+}
+
+.fd-hint-btn {
+  background: #fef3c7;
+  color: #92400e;
+  border: 2px solid #fcd34d;
+  border-radius: 16px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fd-hint-btn:hover {
+  background: #fde68a;
+}
+
+.fd-reset-btn {
+  background: #f0f6f1;
+  color: #2f5442;
+  border: 2px solid #cfe2d5;
+  border-radius: 16px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fd-reset-btn:hover {
+  background: #e1efe5;
+}
+
+.fd-next-btn {
+  background: #2b7050;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 28px;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(43, 112, 80, 0.3);
+  transition: all 0.2s;
+}
+
+.fd-next-btn:hover {
+  background: #22593f;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
   .difference-images {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 }

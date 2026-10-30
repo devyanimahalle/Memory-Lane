@@ -1,177 +1,340 @@
+/* ===================================================
+   MEMORY LANE - REAL PHOTOGRAPHY PICTURE PUZZLE
+   Designed for Cognitive Wellness & Calm Engagement
+=================================================== */
 
 .pp-container {
-  max-width: 850px;
-  margin: 30px auto;
+  max-width: 900px;
+  margin: 20px auto;
   padding: 30px;
   color: #24483b;
-  font-family: Arial, sans-serif;
+  font-family: inherit;
   text-align: center;
 }
 
 .pp-back {
-  display: block;
+  display: inline-flex;
+  align-items: center;
   border: none;
-  background: #e8f3eb;
-  color: #285c43;
-  padding: 12px 20px;
-  border-radius: 12px;
+  background: #eaf3ed;
+  color: #2b6146;
+  padding: 12px 24px;
+  border-radius: 14px;
   cursor: pointer;
   font-size: 15px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  margin-bottom: 25px;
+}
+
+.pp-back:hover {
+  background: #d8ecde;
+  transform: translateX(-3px);
 }
 
 .pp-heading {
-  margin: 35px 0 25px;
+  margin: 10px 0 25px;
 }
 
 .pp-label {
-  color: #69977b;
-  font-weight: bold;
+  color: #5d8a70;
+  font-weight: 800;
   letter-spacing: 2px;
   font-size: 12px;
+  text-transform: uppercase;
 }
 
 .pp-heading h1 {
-  font-size: 34px;
-  margin: 12px 0;
+  font-size: clamp(28px, 4vw, 38px);
+  margin: 10px 0;
+  color: #214b38;
 }
 
 .pp-heading p {
-  color: #71847a;
+  color: #647b6e;
   font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
+/* CONTROL GROUPS */
+.pp-control-group {
+  margin: 18px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.pp-control-title {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #5c7e6c;
+  text-transform: uppercase;
+}
+
+/* PUZZLE & GRID TABS */
+.pp-puzzle-tabs,
+.pp-grid-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pp-puzzle-tab,
+.pp-grid-tab {
+  background: white;
+  border: 1.5px solid #dbe6dd;
+  border-radius: 20px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a6657;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pp-puzzle-tab:hover,
+.pp-grid-tab:hover {
+  border-color: #55916d;
+  background: #f4f8f5;
+}
+
+.pp-puzzle-tab.active,
+.pp-grid-tab.active {
+  background: #3f7b58;
+  color: white;
+  border-color: #3f7b58;
+  box-shadow: 0 4px 14px rgba(63, 123, 88, 0.25);
+}
+
+/* INFO BAR */
 .pp-info {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 30px;
-  margin: 25px 0;
+  margin: 22px 0;
+  flex-wrap: wrap;
 }
 
-.pp-info div {
+.pp-stat {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
-.pp-info div span {
+.pp-stat span {
   font-size: 11px;
   color: #789184;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  font-weight: 800;
 }
 
-.pp-info div strong {
-  font-size: 25px;
+.pp-stat strong {
+  font-size: 24px;
+  color: #28543d;
 }
 
-.pp-info button,
-.pp-restart {
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  background: #dcefe2;
+.pp-preview-btn {
+  border: 1.5px solid #c2dbcb;
+  padding: 10px 20px;
+  border-radius: 14px;
+  background: #eef7f1;
   color: #285c43;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.2s;
 }
 
-.pp-preview {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  background: #f1f7f2;
-  border-radius: 15px;
+.pp-preview-btn:hover {
+  background: #deefe3;
+}
+
+/* REFERENCE PREVIEW CARD */
+.pp-preview-card {
+  max-width: 440px;
+  margin: 15px auto 25px;
+  background: white;
+  border: 2px solid #dce8df;
+  border-radius: 18px;
   padding: 15px;
-  margin: 20px auto;
-  max-width: 300px;
+  box-shadow: 0 8px 24px rgba(30, 60, 45, 0.08);
 }
 
-.pp-preview span {
-  font-size: 35px;
+.pp-preview-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
 }
 
+.pp-preview-caption {
+  margin: 10px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #517160;
+}
+
+/* LANDSCAPE PUZZLE BOARD (4:3 RATIO) */
 .pp-board {
-  width: min(100%, 420px);
-  margin: 30px auto;
+  width: min(100%, 540px);
+  aspect-ratio: 4 / 3;
+  margin: 25px auto;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.pp-tile {
-  min-height: 160px;
-  border: 3px solid transparent;
+  gap: 8px;
+  background: #e1ede4;
+  padding: 8px;
   border-radius: 20px;
-  background: #eaf4ed;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+  box-shadow: 0 10px 30px rgba(36, 68, 52, 0.12);
+  transition: gap 0.4s ease, padding 0.4s ease;
+}
+
+.pp-board.completed {
+  gap: 0;
+  padding: 0;
+  box-shadow: 0 12px 36px rgba(45, 110, 75, 0.25);
+  overflow: hidden;
+}
+
+/* INDIVIDUAL PHOTO TILE */
+.pp-tile {
+  position: relative;
+  border: 2.5px solid transparent;
+  border-radius: 12px;
   cursor: pointer;
-  transition: 0.2s;
-}
-
-.pp-tile span {
-  font-size: 65px;
-}
-
-.pp-tile small {
-  color: #557464;
-  font-size: 13px;
+  background-repeat: no-repeat;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  padding: 0;
 }
 
 .pp-tile:hover {
-  transform: translateY(-3px);
+  transform: scale(1.02);
+  z-index: 2;
+  box-shadow: 0 8px 20px rgba(25, 60, 40, 0.18);
 }
 
 .pp-tile.pp-selected {
-  border-color: #3b9b70;
-  background: #d4eddd;
-  transform: scale(0.96);
+  border-color: #2b8c5a;
+  box-shadow: 0 0 0 4px rgba(43, 140, 90, 0.35);
+  transform: scale(0.97);
+  z-index: 3;
 }
 
-.pp-instruction {
-  color: #617b6d;
-  margin: 20px 0;
-  line-height: 1.6;
+.pp-tile.pp-correct-pos {
+  border-color: rgba(60, 140, 90, 0.35);
 }
 
+.pp-tile.pp-solved {
+  border-radius: 0;
+  cursor: default;
+  border: none;
+}
+
+.pp-tile.pp-solved:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* TILE CORNER NUMBER HELPER */
+.pp-tile-number {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #204b36;
+  font-weight: 800;
+  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* SUCCESS BANNER */
 .pp-success {
-  background: #e8f5e9;
-  padding: 18px;
-  border-radius: 16px;
-  margin: 20px auto;
+  background: #eaf4ed;
+  border: 2px solid #b7dfc6;
+  padding: 24px;
+  border-radius: 18px;
+  margin: 25px auto;
+  max-width: 540px;
 }
 
 .pp-success h2 {
-  color: #28734b;
+  color: #266b44;
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.pp-success p {
+  color: #557563;
+  margin: 0 0 18px;
+  font-size: 15px;
+}
+
+.pp-success-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.pp-restart,
+.pp-next-btn {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 750;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .pp-restart {
-  background: #347e59;
-  color: white;
-  margin-top: 15px;
+  background: white;
+  color: #2a5f43;
+  border: 1.5px solid #bdd5c5;
 }
 
 .pp-restart:hover {
-  background: #245e41;
+  background: #f5f9f6;
 }
 
-@media (max-width: 500px) {
+.pp-next-btn {
+  background: #3b8159;
+  color: white;
+}
+
+.pp-next-btn:hover {
+  background: #2b6443;
+}
+
+.pp-instruction {
+  color: #657e71;
+  font-size: 15px;
+  margin: 20px 0 10px;
+  min-height: 24px;
+}
+
+@media (max-width: 600px) {
   .pp-container {
     padding: 15px;
   }
 
-  .pp-heading h1 {
-    font-size: 27px;
+  .pp-board {
+    width: 100%;
   }
 
-  .pp-tile {
-    min-height: 125px;
-  }
-
-  .pp-tile span {
-    font-size: 48px;
+  .pp-info {
+    gap: 15px;
   }
 }
