@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { initialReminders } from './reminderData';
+import { initialReminders, initialEngagementEvents } from './reminderData';
 import './reminders.css';
 
 /**
@@ -64,6 +64,20 @@ function formatReminderTime(isoString) {
 }
 
 /**
+ * Formats an ISO datetime string for event history display (e.g., "9:05 AM").
+ */
+function formatEventTime(isoString) {
+  if (!isoString) return '';
+  try {
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) return isoString;
+    return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  } catch (error) {
+    return isoString;
+  }
+}
+
+/**
  * Determines the daily timeline period for a scheduled reminder:
  * - morning: before 12:00 PM (hour < 12)
  * - afternoon: 12:00 PM to before 5:00 PM (12 <= hour < 17)
@@ -112,15 +126,17 @@ function getPreferredVoice(lang = DEFAULT_VOICE_LANG) {
  * ReminderModule Component
  * 
  * Part of Memory Lane prototype (Member 2).
- * Handles patient reminders, daily routine timeline, voice reading, and engagement reporting.
+ * Handles patient reminders, daily routine timeline, voice reading, and caregiver event history.
  * 
  * @param {Object} props
  * @param {Array} [props.reminders] - Array of Reminder objects. If omitted/undefined, falls back to mock data.
+ * @param {Array} [props.events] - Optional array of EngagementEvent objects. If omitted/undefined, falls back to mock events.
  * @param {Function} [props.onReminderUpdate] - Callback emitting complete updated Reminder object.
  * @param {Function} [props.onEngagement] - Callback emitting EngagementEvent object.
  */
 export default function ReminderModule({
   reminders,
+  events,
   onReminderUpdate,
   onEngagement
 }) {
@@ -129,6 +145,12 @@ export default function ReminderModule({
   const isPropProvided = reminders !== undefined && reminders !== null;
   const [items, setItems] = useState(() => {
     return isPropProvided ? reminders : initialReminders;
+  });
+
+  // Task 7: Caregiver Event History State
+  const isEventsPropProvided = events !== undefined && events !== null;
+  const [eventList, setEventList] = useState(() => {
+    return isEventsPropProvided ? events : initialEngagementEvents;
   });
 
   // Web Speech API state (Task 5)
@@ -147,6 +169,12 @@ export default function ReminderModule({
       setItems(reminders);
     }
   }, [reminders]);
+
+  useEffect(() => {
+    if (events !== undefined && events !== null) {
+      setEventList(events);
+    }
+  }, [events]);
 
   // Handle asynchronous voice loading in browsers like Chrome
   useEffect(() => {
@@ -258,7 +286,7 @@ export default function ReminderModule({
       completedAt: completedTimestamp
     };
 
-    // 1. Update internal state immediately
+    // 1. Update internal reminder state immediately
     setItems((prevItems) =>
       prevItems.map((item) => (item.id === reminder.id ? updatedReminder : item))
     );
@@ -268,17 +296,22 @@ export default function ReminderModule({
       onReminderUpdate(updatedReminder);
     }
 
-    // 3. Emit engagement event adhering strictly to shared EngagementEvent schema
+    // 3. Create engagement event adhering strictly to shared EngagementEvent schema
+    const isRoutine = reminder.type === 'routine';
+    const engagementEvent = {
+      id: `event-${Date.now()}`,
+      type: isRoutine ? 'routine' : 'reminder',
+      action: isRoutine ? 'completed' : 'confirmed',
+      label: `${isRoutine ? 'Completed routine' : 'Confirmed reminder'}: ${reminder.title}`,
+      occurredAt: completedTimestamp,
+      durationMinutes: 1
+    };
+
+    // 4. Append to local caregiver event history (Task 7)
+    setEventList((prevEvents) => [engagementEvent, ...prevEvents]);
+
+    // 5. Emit engagement event to parent callback
     if (typeof onEngagement === 'function') {
-      const isRoutine = reminder.type === 'routine';
-      const engagementEvent = {
-        id: `event-${Date.now()}`,
-        type: isRoutine ? 'routine' : 'reminder',
-        action: isRoutine ? 'completed' : 'confirmed',
-        label: `${isRoutine ? 'Completed routine' : 'Confirmed reminder'}: ${reminder.title}`,
-        occurredAt: completedTimestamp,
-        durationMinutes: 1
-      };
       onEngagement(engagementEvent);
     }
   };
@@ -297,7 +330,7 @@ export default function ReminderModule({
       completedAt: null
     };
 
-    // 1. Update internal state
+    // 1. Update internal reminder state
     setItems((prevItems) =>
       prevItems.map((item) => (item.id === reminder.id ? updatedReminder : item))
     );
@@ -307,16 +340,21 @@ export default function ReminderModule({
       onReminderUpdate(updatedReminder);
     }
 
-    // 3. Emit engagement event using schema-compatible 'viewed' action
+    // 3. Create engagement event using schema-compatible 'viewed' action
+    const engagementEvent = {
+      id: `event-${Date.now()}`,
+      type: reminder.type === 'routine' ? 'routine' : 'reminder',
+      action: 'viewed',
+      label: `Snoozed reminder: ${reminder.title}`,
+      occurredAt: new Date().toISOString(),
+      durationMinutes: 1
+    };
+
+    // 4. Append to local caregiver event history (Task 7)
+    setEventList((prevEvents) => [engagementEvent, ...prevEvents]);
+
+    // 5. Emit engagement event to parent callback
     if (typeof onEngagement === 'function') {
-      const engagementEvent = {
-        id: `event-${Date.now()}`,
-        type: reminder.type === 'routine' ? 'routine' : 'reminder',
-        action: 'viewed',
-        label: `Snoozed reminder: ${reminder.title}`,
-        occurredAt: new Date().toISOString(),
-        durationMinutes: 1
-      };
       onEngagement(engagementEvent);
     }
   };
@@ -621,6 +659,53 @@ export default function ReminderModule({
               'No evening reminders scheduled. Have a restful, cozy evening.'
             )}
           </div>
+        )}
+      </div>
+
+      {/* Task 7: Caregiver Event History */}
+      <div className="ml-history-section" role="region" aria-label="Caregiver Activity History">
+        <div className="ml-history-header">
+          <h3 className="ml-history-title">Recent Activity History</h3>
+          <p className="ml-history-subtitle">
+            Caregiver overview of completed routines and confirmed reminders for today.
+          </p>
+        </div>
+
+        {eventList.length === 0 ? (
+          <div className="ml-history-empty" role="status">
+            <p className="ml-history-empty-text">
+              No activity recorded yet today. Completed routines and reminders will appear here.
+            </p>
+          </div>
+        ) : (
+          <ul className="ml-history-list">
+            {eventList.map((event) => {
+              const isConfirmed = event.action === 'confirmed';
+              const isCompleted = event.action === 'completed';
+              const isViewed = event.action === 'viewed';
+              const isMissed = event.action === 'missed';
+
+              return (
+                <li key={event.id} className="ml-history-item">
+                  <div className="ml-history-item-main">
+                    <span className="ml-history-item-label">{event.label}</span>
+                    <span className="ml-history-item-time">
+                      Recorded at {formatEventTime(event.occurredAt)}
+                    </span>
+                  </div>
+
+                  <span
+                    className={`ml-history-badge ml-history-badge-${event.action}`}
+                  >
+                    {isConfirmed && '✓ Confirmed'}
+                    {isCompleted && '✓ Completed'}
+                    {isViewed && '⏱ Snoozed'}
+                    {isMissed && 'Missed'}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         )}
       </div>
     </section>
