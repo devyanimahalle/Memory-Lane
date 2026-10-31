@@ -9,6 +9,9 @@
 
 ## Next
 **Lead**
+- [ ] Approve a one-line clarification in AGENTS.md that user-added memory content (photos, recordings) stays on the device and is never committed (Lead)
+- [ ] Memory Detail: keyboard-only and reduced-motion pass; try real voices, Safari and Firefox recording (Lead and QA)
+- [ ] Tell Member 3 (memory album) about the IndexedDB content layer so the real album reuses it, and agree the memory data shape (Lead and Member 3)
 - [ ] Decide whether the Games covers should drop their `tint-butter` and `tint-peach` card colours for cooler tokens (Lead)
 - [ ] Games: wire `onSelect(game)` in `PatientHome.handleSelectGame` to Richa's game pages and replace `gameArt.js` covers with real portrait art (Lead and Member 3). Confirm titles in `games/gameCards.js`.
 - [ ] Compare the Memory Album with the reference video and tune `recede`, `keystone` and lens size in `MemoryCarousel.jsx` (Lead)
@@ -21,7 +24,7 @@
 - [ ] Voice: connect the real voice feature to `runCommand(id)` in `PatientHome.jsx` (Lead and Ishani)
 - [ ] Replace the placeholder page title and add the active nav highlight (Lead)
 - [ ] Caregiver dashboard: recompose to the direction (greeting banner, KPI cards, deep-teal chart, alerts) for mobile and desktop
-- [ ] Caregiver dashboard: replace placeholder panels with real data and charts
+- [x] Caregiver dashboard: replace placeholder panels with real data and charts (analytics summary integrated, CSS chart)
 - [ ] Integrate the feature exports into the screens
 - [ ] Rewrite `README.md` for the project
 
@@ -49,9 +52,11 @@
 - [ ] Demo script and final QA (all)
 
 ## Requests (changes needed in someone else's area)
-_None yet._
+- **Sahasra (analytics):** (1) please review the Lead-added `src/features/analytics/index.js` (re-exports `getAnalyticsSummary` only). (2) Add per-game and per-album counts to `daily[]` so the dashboard can split engagement. (3) Optional: a `dateLabel` on alerts, or message templates without the raw ISO date (the dashboard currently rewrites the date with a regex). (4) Confirm the provisional thresholds and the patient identity (`analyticsPatient.displayName`) with the product lead.
 
 ## Done
+- [x] Memory Detail upgraded: uploaded photos, editable description, text-to-speech controls, microphone voice notes, IndexedDB persistence per memory ID, first photo as carousel cover (Lead, 2026-10-31)
+- [x] Analytics integrated into the Caregiver Dashboard: engagement chart, alerts, medicine week, activity and meals strips; Mr. Sharma in both views (Lead, 2026-10-31)
 - [x] Larger Oswald section titles for Games and Memory Album (Lead, 2026-10-31)
 - [x] Typography: Oswald headings and Figtree body applied across both experiences, fonts verified loading, no overflow at 375/768/1280 (Lead, 2026-10-31)
 - [x] Palette correction: warm lane tints and alert fill removed, carousel RGB fringe off, non-token art colours remapped, hex audit script clean (Lead, 2026-10-31)

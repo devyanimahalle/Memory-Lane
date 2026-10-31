@@ -1,5 +1,5 @@
 // Fictional, simulated data for the Patient Home prototype. No real patient data.
-export const PATIENT = { name: 'Margaret' }
+export const PATIENT = { name: 'Mr. Sharma' }
 
 // Demo clock: a stable "now" so the lane looks the same every review.
 // Override with ?time=HH:MM in the URL.

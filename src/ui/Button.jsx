@@ -1,5 +1,5 @@
 const BASE =
-  'inline-flex min-h-touch-lg cursor-pointer items-center justify-center gap-2 rounded-full font-semibold transition-colors duration-quick ease-gentle active:translate-y-px'
+  'inline-flex min-h-touch-lg cursor-pointer items-center justify-center gap-2 rounded-full font-semibold transition-colors duration-quick ease-gentle active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50'
 
 const SIZES = {
   md: 'px-8 text-lead',

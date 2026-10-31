@@ -9,6 +9,7 @@ import { GAMES } from './games/gameCards'
 import { MemoryAlbumSection } from './memories/MemoryAlbumSection'
 import { MemoryDetail } from './memories/MemoryDetail'
 import { MEMORIES } from './memories/demoMemories'
+import { useMemoryCovers } from './memories/useMemoryCovers'
 import { PATIENT, SCHEDULE } from './mockData'
 import { formatTime, parseTime, useDemoClock } from './useDemoClock'
 
@@ -47,6 +48,7 @@ const prefersReducedMotion = () =>
 // real voice feature will call.
 export function PatientHome() {
   const minutes = useDemoClock()
+  const { memories, ready: coversReady } = useMemoryCovers(MEMORIES)
   const [date] = useState(() => DATE_FORMAT.format(new Date()))
   const [view, setView] = useState(() => (savedMemoryIndex() === null ? null : 'memory')) // null | 'memory'
   const [albumIndex, setAlbumIndex] = useState(() => savedMemoryIndex() ?? 0)
@@ -201,7 +203,7 @@ export function PatientHome() {
   if (view === 'memory') {
     return (
       <div className="pb-28">
-        <MemoryDetail memory={MEMORIES[albumIndex]} onBack={closeMemory} headingRef={headingRef} />
+        <MemoryDetail memory={memories[albumIndex]} onBack={closeMemory} headingRef={headingRef} />
         <VoiceAssistant variant="bar" onCommand={runCommand} />
       </div>
     )
@@ -244,14 +246,18 @@ export function PatientHome() {
       </Reveal>
 
       <Reveal index={4}>
-        <MemoryAlbumSection
-          memories={MEMORIES}
-          index={albumIndex}
-          restored={albumRestored}
-          onIndexChange={setAlbumIndex}
-          onOpen={openMemory}
-          openButtonRef={openButtonRef}
-        />
+        {coversReady ? (
+          <MemoryAlbumSection
+            memories={memories}
+            index={albumIndex}
+            restored={albumRestored}
+            onIndexChange={setAlbumIndex}
+            onOpen={openMemory}
+            openButtonRef={openButtonRef}
+          />
+        ) : (
+          <div id="memory-album" aria-busy="true" className="min-h-[40rem]" />
+        )}
       </Reveal>
     </div>
   )

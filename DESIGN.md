@@ -152,7 +152,24 @@ Existing Mint Daylight tokens only; no new hues. The chart-3 purple is a chart-s
 - **Rules:** tints mean category and are never whole-page washes; no gradients, glows, red, yellow or pink fills added by the UI. **No hex outside `src/index.css`**, except token mirrors in the drawn data-URI art (`gameArt.js`, `demoArt.js`), which only use token values. The carousel's RGB fringe (`dispersion`) is off.
 - **Contrast:** checked with a node script over the new pairs; patient text 7:1 or better (ink on tints 12:1 or better), non-text marks 3:1 or better.
 
+## Caregiver analytics (built 2026-10-31)
+- Data comes only from `getAnalyticsSummary()` via `src/features/analytics/index.js`, read in `src/screens/caregiver/analytics/useAnalyticsSummary.js`. The demo patient is **Mr. Sharma** in both experiences.
+- **Engagement chart:** seven CSS bars (no chart library), `accent` at or above the usual routine, `turquoise` below it, a dashed "Usual: 3 a day" line, value labels, and a hidden table for screen readers. Days with no data are dashed placeholders with a dash, never zero bars.
+- **Alerts:** white panel with a deep-teal rule; each item has a small "Medicine" or "Routine" chip and the module's own message with the date shown as "Wed 28 Oct". Empty state: "Nothing unusual compared with the usual routine."
+- **Reminders and Activities:** Today (latest day; "still in progress" when incomplete), This week (70% confirmed plus a 7-day strip of confirmed/scheduled), Activity this week and Meals logged (7-day strips). No data shows a dash and "No data" for assistive tech; null totals say "Not available".
+- Panels sit in one column until 1024px so the seven-day charts stay readable.
+
+## Memory Detail: personal memory management (built 2026-10-31)
+- **Page:** Back to home, title, then on desktop a 7/5 split (photos left; About and Voice notes right), single column on phones in the order photos, About, Voice notes. A footnote says content is saved on this device only.
+- **Photos:** viewer with thumbnails and Previous/Next, **Add photos** (several at once; very large pictures are downsized to 2048px), **Remove this photo** with an inline Keep/Remove step. The built-in stand-in photos can be removed too. Empty state: "No photos yet."
+- **Description:** view mode with **Edit description**; edit mode with a labelled text area, Save and Cancel (Escape cancels); **Restore original text** appears once edited. **Read to me** reads the saved text sentence by sentence with Pause, Resume and Stop.
+- **Voice notes:** **Record a voice note** (microphone), timer, Pause, Resume, Stop, then listen back and Save, Record again or Discard. Saved notes list newest first with Play/Pause, length and Delete (Keep/Delete step). Only one sound plays at a time.
+- **Look:** existing tokens only; no red (confirmations use the primary and secondary pills); Oswald for card titles and the timer, Figtree for the rest; the recording dot only pulses when motion is allowed and state is always also stated in words.
+- **Carousel cover:** the first photo added to a memory becomes its carousel cover.
+- **Failure messages (plain language):** storage unavailable (changes lost on close), not enough space, microphone blocked, no microphone, microphone busy, recording not supported or page not secure, picture not readable or too large.
+
 ## Open decisions
+
 - [x] Font: Oswald (headings) and Figtree (body), implemented 2026-10-31.
 - [ ] Voice recognition approach (A, B or C) with Ishani.
 - [ ] Interaction videos: supply keyframes or notes. (The album look was built from the written brief and the carousel code, so check it against the video.)
