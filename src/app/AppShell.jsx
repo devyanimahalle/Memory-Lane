@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { seedReminders } from '../screens/patient/reminderSeed'
 import { SosHistoryGuard } from './sos/SosHistoryGuard'
 import { useView } from './useView'
 import { ViewSwitcher } from './ViewSwitcher'
@@ -6,6 +7,9 @@ import { PatientLayout } from './PatientLayout'
 import { CaregiverLayout } from './CaregiverLayout'
 import { PatientHome } from '../screens/patient/PatientHome'
 import { CaregiverDashboard } from '../screens/caregiver/CaregiverDashboard'
+
+// The starting tasks are put in place once, only when no tasks were ever saved in this browser.
+seedReminders()
 
 const VIEW_LABELS = { patient: 'Patient view', caregiver: 'Caregiver view' }
 

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 const NAV = [
   { href: '#overview', label: 'Overview' },
   { href: '#reminders', label: 'Reminders' },
+  { href: '#tasks', label: 'Patient tasks' },
   { href: '#activities', label: 'Activities' },
   { href: '#safety', label: 'Location safety' },
 ]

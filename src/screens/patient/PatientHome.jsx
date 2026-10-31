@@ -3,9 +3,10 @@ import { motion, useReducedMotion } from 'motion/react'
 import { DayLane } from './DayLane'
 import { GreetingHeader } from './GreetingHeader'
 import { NextUpCard } from './NextUpCard'
+import { Button } from '../../ui/Button'
 import { VoiceAssistant } from './VoiceAssistant'
 import { GAME_COMPONENTS } from '../../features/activities'
-import { getNextReminder, minutesOf, stopSpeaking, toReminder, useReminders } from '../../features/reminders'
+import { getNextReminder, stopSpeaking, useReminders } from '../../features/reminders'
 import { GamesSection } from './games/GamesSection'
 import { GAMES } from './games/gameCards'
 import { recordEngagement } from './games/engagementLog'
@@ -16,8 +17,10 @@ import { MemoryAlbumSection } from './memories/MemoryAlbumSection'
 import { MemoryDetail } from './memories/MemoryDetail'
 import { MEMORIES } from './memories/demoMemories'
 import { useMemoryCovers } from './memories/useMemoryCovers'
-import { PATIENT, SCHEDULE } from './mockData'
-import { formatTime, parseTime, useDemoClock } from './useDemoClock'
+import { PATIENT } from './mockData'
+import { MyTasks } from './tasks/MyTasks'
+import { byTime, dateOf, iconFor, minutesOfDay, timeOf, todayString } from '../tasks/taskUi'
+import { formatTime, useDemoClock } from './useDemoClock'
 
 // Gentle entrance: fade and rise, staggered. Opacity only under reduced motion.
 function Reveal({ index = 0, className = '', children }) {
@@ -39,6 +42,36 @@ const DATE_FORMAT = new Intl.DateTimeFormat(undefined, {
   day: 'numeric',
   month: 'long',
 })
+
+// Asks "Did you take it?" before a medicine task is marked taken.
+function MedicineConfirm({ task, onYes, onNo }) {
+  const ref = useRef(null)
+  useEffect(() => {
+    const dialog = ref.current
+    if (!dialog) return
+    if (task && !dialog.open) dialog.showModal()
+    if (!task && dialog.open) dialog.close()
+  }, [task])
+  return (
+    <dialog
+      ref={ref}
+      onClose={onNo}
+      aria-labelledby="medicine-confirm-title"
+      className="m-auto w-[min(92vw,28rem)] rounded-xl border-0 bg-surface p-gutter text-ink shadow-raised backdrop:bg-ink/60"
+    >
+      <h2 id="medicine-confirm-title" className="text-title font-bold">
+        Did you take it?
+      </h2>
+      <p className="mt-2 text-lead text-ink-soft">{task?.title}</p>
+      <div className="mt-6 flex flex-col gap-3">
+        <Button onClick={onYes}>Yes, I took it</Button>
+        <Button variant="secondary" onClick={onNo}>
+          Not yet
+        </Button>
+      </div>
+    </dialog>
+  )
+}
 
 // An open memory is stored in the browser history, so the Back button and a reload both work.
 function savedMemoryIndex() {
@@ -69,14 +102,11 @@ export function PatientHome() {
   const [gameId, setGameId] = useState(savedGameId)
   const [albumIndex, setAlbumIndex] = useState(() => savedMemoryIndex() ?? 0)
   const [albumRestored, setAlbumRestored] = useState(() => savedMemoryIndex() !== null)
-  // Reminders (shared contract) drive Next up and Today's lane. Items before the demo time start taken.
-  const { reminders, markTaken, snooze } = useReminders(
-    () =>
-      SCHEDULE.map((item) =>
-        toReminder(item, { taken: parseTime(item.time) < minutes && !item.leftOpen }),
-      ),
-    (event) => recordEngagement(event, { source: 'reminders' }),
-  )
+  // The shared Reminders (the same tasks the caregiver manages) drive Next up and Today's lane.
+  const { reminders, markTaken, snooze } = useReminders({
+    onEngagement: (event) => recordEngagement(event, { source: 'reminders' }),
+  })
+  const [confirmMedicineId, setConfirmMedicineId] = useState(null)
   const [notice, setNotice] = useState(null)
   const [highlightId, setHighlightId] = useState(null)
   const headingRef = useRef(null)
@@ -94,17 +124,21 @@ export function PatientHome() {
         : null,
   )
 
-  const nextReminder = getNextReminder(reminders, minutes)
-  const next = nextReminder ? SCHEDULE.find((i) => i.id === nextReminder.id) : undefined
-  const stops = SCHEDULE.map((item) => {
-    const reminder = reminders.find((r) => r.id === item.id)
+  const todays = reminders.filter((r) => dateOf(r) === todayString()).sort(byTime)
+  const laneItem = (r) => ({ id: r.id, time: timeOf(r), title: r.title, icon: iconFor(r), note: r.note, type: r.type })
+  const nextReminder = getNextReminder(
+    todays.map((r) => ({ ...r })),
+    minutes,
+  )
+  const next = nextReminder ? laneItem(nextReminder) : undefined
+  const stops = todays.map((r) => {
     let status = 'later'
-    if (reminder?.status === 'taken') status = 'done'
-    else if (item === next) status = 'next'
-    else if (reminder?.status !== 'snoozed' && minutesOf(reminder) < minutes) status = 'still'
-    return { item, status }
+    if (r.status === 'taken') status = 'done'
+    else if (nextReminder && r.id === nextReminder.id) status = 'next'
+    else if (r.status !== 'snoozed' && minutesOfDay(r) < minutes) status = 'still'
+    return { item: laneItem(r), status }
   })
-  const upcoming = reminders.filter((r) => r.status === 'pending' && minutesOf(r) >= minutes)
+  const upcoming = todays.filter((r) => r.status === 'pending' && minutesOfDay(r) >= minutes)
 
   // Scroll: a memory or a game opens at the top; coming back restores the home scroll position.
   useLayoutEffect(() => {
@@ -187,9 +221,16 @@ export function PatientHome() {
     recordEngagement(event, { gameId })
   }
 
-  function handleDone() {
-    markTaken(next.id)
+  function finishTask(id) {
+    markTaken(id)
+    setConfirmMedicineId(null)
     setNotice({ kind: 'done', text: 'Lovely, that is done.' })
+  }
+
+  // Medicine is only marked taken after the person confirms it a second time.
+  function handleDone() {
+    if (next.type === 'medicine') setConfirmMedicineId(next.id)
+    else finishTask(next.id)
   }
 
   function handleLater() {
@@ -241,12 +282,12 @@ export function PatientHome() {
     if (id === 'reminders') {
       const coming = upcoming.slice(0, 2)
       if (!coming.length) return 'You have nothing left for today.'
-      return `Coming up: ${coming.map((r) => `${r.title} at ${formatTime(minutesOf(r))}`).join(', then ')}.`
+      return `Coming up: ${coming.map((r) => `${r.title} at ${formatTime(timeOf(r))}`).join(', then ')}.`
     }
     if (id === 'done') {
       if (!next) return 'There is nothing waiting for you. Well done.'
-      markTaken(next.id)
-      setNotice({ kind: 'done', text: 'Lovely, that is done.' })
+      if (next.type === 'medicine') return 'Please tap Done on the card to confirm your medicine.'
+      finishTask(next.id)
       return `Lovely. ${next.title} is done.`
     }
     if (id === 'later') {
@@ -327,6 +368,10 @@ export function PatientHome() {
       </div>
 
       <Reveal index={3}>
+        <MyTasks minutes={minutes} onEngagement={(event) => recordEngagement(event, { source: 'reminders' })} />
+      </Reveal>
+
+      <Reveal index={3}>
         <GamesSection games={GAMES} onSelect={openGame} />
       </Reveal>
 
@@ -348,6 +393,12 @@ export function PatientHome() {
       <Reveal index={5}>
         <PatientLocationCard />
       </Reveal>
+
+      <MedicineConfirm
+        task={confirmMedicineId ? todays.find((r) => r.id === confirmMedicineId) : null}
+        onYes={() => finishTask(confirmMedicineId)}
+        onNo={() => setConfirmMedicineId(null)}
+      />
     </div>
   )
 }

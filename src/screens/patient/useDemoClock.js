@@ -21,10 +21,12 @@ export function formatTime(value) {
 }
 
 // Minutes since midnight for the demo "now". Fixed per page load.
+export function getDemoMinutes() {
+  const fromQuery = new URLSearchParams(window.location.search).get('time')
+  return parseTime(fromQuery) ?? parseTime(DEMO_TIME)
+}
+
 export function useDemoClock() {
-  const [minutes] = useState(() => {
-    const fromQuery = new URLSearchParams(window.location.search).get('time')
-    return parseTime(fromQuery) ?? parseTime(DEMO_TIME)
-  })
+  const [minutes] = useState(getDemoMinutes)
   return minutes
 }

@@ -4,6 +4,7 @@ import { DayStrip } from './analytics/DayStrip'
 import { EngagementChart } from './analytics/EngagementChart'
 import { MedicineWeek } from './analytics/MedicineWeek'
 import { SosAlertPanel } from './sos/SosAlertPanel'
+import { ManageTasks } from './tasks/ManageTasks'
 import { TREND_TEXT, daysWithDataText, friendlyDate } from './analytics/format'
 import { useAnalyticsSummary } from './analytics/useAnalyticsSummary'
 
@@ -148,6 +149,8 @@ export function CaregiverDashboard() {
           <MedicineWeek weekly={weekly} daily={daily} />
         </Panel>
       </Section>
+
+      <ManageTasks />
 
       <Section id="activities" title="Activities">
         <Panel title="Activity this week" rule="gentle">

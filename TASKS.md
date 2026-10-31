@@ -34,7 +34,7 @@
 - [x] Reminder data model, status and snooze logic, completion events and voice-phrase matching integrated into Patient Home (Lead, 2026-10-31; Ishani to review the port)
 - [x] Voice prompt helper (Web Speech API) used by the Ask me assistant; consent-gated listening
 - [ ] Show reminder and routine event history on the caregiver dashboard (her ReminderModule has a history list that was not integrated)
-- [ ] Persist reminder status across reloads
+- [x] Reminder and task status persisted across reloads (shared store in localStorage)
 - [ ] Voice prompt helper exported for the Memory Album read-aloud
 
 **Member 3: activities**
@@ -49,6 +49,7 @@
 - [ ] Set up Playwright (needs Lead approval for dependencies) and write smoke tests
 
 ## Later
+- [ ] Tasks follow-ups: handle the day changing (tasks keep their dates; today's list is empty after midnight), show reminder and task event history on the caregiver dashboard from the engagement log, keyboard and screen-reader pass of the task forms, real cross-device sync needs a server (out of scope) (Lead and QA)
 - [ ] Location follow-ups: test real GPS on a phone (consent, denied, unavailable); remove the remaining emoji in `LocationMap` overlay buttons; fix the `LocationMap` exhaustive-deps warning; decide whether to keep OpenStreetMap tiles online-only; real cross-device tracking is out of scope (needs a server)
 - [ ] SOS follow-ups: add a real demo number to `PATIENT.caregiver.phone` to enable the Call button; check the right-edge SOS button and its gutter on a real notched phone, also in landscape; screen-reader, real-device and other-browser checks; real alerting (SMS or push) is out of scope for the prototype (Lead)
 - [ ] Review the two interaction videos once keyframes or notes are supplied (Lead)
@@ -63,6 +64,7 @@
 - **Sahasra (analytics, earlier):** (1) please review the Lead-added `src/features/analytics/index.js` (re-exports `getAnalyticsSummary` only). (2) Add per-game and per-album counts to `daily[]` so the dashboard can split engagement. (3) Optional: a `dateLabel` on alerts, or message templates without the raw ISO date (the dashboard currently rewrites the date with a regex). (4) Confirm the provisional thresholds and the patient identity (`analyticsPatient.displayName`) with the product lead.
 
 ## Done
+- [x] Editable daily tasks: patient "My daily tasks" (add, edit, done, later, delete with confirmation, medicine confirmation) and caregiver "Manage patient tasks" (add, edit with date, time and type, delete with confirmation, status summary, completion history, demo reset), one shared Reminder store, same-browser sync, disclosed (Lead, 2026-10-31)
 - [x] Ishani's work integrated: reminders and voice into Patient Home (existing UI), GPS location sharing on the patient side with explicit consent and a caregiver Location safety section (same-browser, disclosed), Leaflet added, AGENTS.md exceptions recorded (Lead, 2026-10-31)
 - [x] SOS button moved to the right edge of the viewport, vertically centred, with a reserved right gutter; verified at 375, 768 and 1280px on every patient page with no overlap or horizontal scroll (Lead, 2026-10-31)
 - [x] SOS fixes: browser Back/Forward protection while an SOS is active, mobile SOS button moved into the Ask me bar row so it never covers content, demo caregiver renamed to Ananya in the lane and memories (Lead, 2026-10-31)
