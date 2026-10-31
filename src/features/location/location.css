@@ -1,0 +1,1162 @@
+/**
+ * location.css - Memory Lane GPS Location Tracking & Caregiver Dashboard Styles
+ *
+ * Theme palette:
+ *   Mint:       #D0F2EC
+ *   Turquoise:  #08B9A5
+ *   Deep Navy:  #101D2D
+ *   White:      #FFFFFF
+ *   Light Aqua: #A9E8DE
+ *   Muted Grey: #667579
+ *
+ * Typography:
+ *   Display/Headings: Barlow Condensed
+ *   Body Text:        Nunito
+ */
+
+/* === Top-level Container === */
+.ml-location-module {
+  --ml-mint:           #D0F2EC;
+  --ml-turquoise:      #08B9A5;
+  --ml-turquoise-dk:   #069486;
+  --ml-navy:           #101D2D;
+  --ml-aqua:           #A9E8DE;
+  --ml-grey:           #667579;
+  --ml-white:          #FFFFFF;
+
+  --ml-bg-page:         #D0F2EC;
+  --ml-bg-surface:      #FFFFFF;
+  --ml-bg-surface-soft: #F5FDFC;
+  --ml-bg-dark-card:    #101D2D;
+
+  --ml-font-display: 'Barlow Condensed', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ml-font-body:    'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+  font-family: var(--ml-font-body);
+  color: var(--ml-navy);
+}
+
+/* === Dashboard Header === */
+.ml-location-header {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(16, 29, 45, 0.04);
+}
+
+.ml-location-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.ml-location-title {
+  font-family: var(--ml-font-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+}
+
+.ml-location-subtitle {
+  font-size: 16px;
+  color: var(--ml-grey);
+  margin: 8px 0 0;
+  line-height: 1.45;
+}
+
+/* === Patient Consent / Transparency Notice === */
+.ml-transparency-card {
+  background: #EAF9F7;
+  border-left: 4px solid var(--ml-turquoise);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: #0A6A5E;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ml-transparency-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ml-transparency-text {
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* === Status Badges === */
+.ml-status-pill-gps {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ml-status-active {
+  background: #D0F2EC;
+  color: #0A6A5E;
+  border: 1px solid var(--ml-turquoise);
+}
+
+.ml-status-requesting {
+  background: #FFF8E6;
+  color: #7A5800;
+  border: 1px solid #F5C842;
+}
+
+.ml-status-error {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #FCA5A5;
+}
+
+.ml-status-idle {
+  background: #F4F6F7;
+  color: var(--ml-grey);
+  border: 1px solid #C5D0D2;
+}
+
+.ml-status-dot-active {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--ml-turquoise);
+  animation: ml-pulse 1.4s infinite;
+}
+
+@keyframes ml-pulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* === Overview Grid Cards === */
+.ml-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.ml-overview-card {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(16, 29, 45, 0.03);
+}
+
+.ml-overview-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ml-grey);
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.ml-overview-value {
+  font-family: var(--ml-font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.ml-overview-footnote {
+  font-size: 13px;
+  color: var(--ml-grey);
+  margin-top: 6px;
+}
+
+.ml-badge-safe {
+  color: #0A6A5E;
+}
+
+.ml-badge-outside {
+  color: #DC2626;
+}
+
+.ml-badge-unavailable {
+  color: #D97706;
+}
+
+/* === Map Section === */
+.ml-map-section {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(16, 29, 45, 0.04);
+}
+
+.ml-map-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--ml-aqua);
+}
+
+.ml-map-canvas {
+  height: 380px;
+  width: 100%;
+  background: #E8F4F2;
+}
+
+.ml-map-canvas-selecting {
+  cursor: crosshair !important;
+}
+
+.ml-map-quick-actions {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ml-map-action-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--ml-aqua);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ml-navy);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.ml-map-action-btn:hover {
+  background: var(--ml-mint);
+  border-color: var(--ml-turquoise);
+}
+
+.ml-map-instruction-banner {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ml-navy);
+  color: var(--ml-white);
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  z-index: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+.ml-map-overlay-notice {
+  position: absolute;
+  top: 14px;
+  left: 50px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--ml-aqua);
+  color: var(--ml-navy);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* === Map Markers (Leaflet DivIcons) === */
+.ml-patient-marker-outer {
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+
+.ml-patient-marker-pulse {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(8, 185, 165, 0.35);
+  animation: ml-marker-pulse 1.8s infinite ease-out;
+}
+
+.ml-patient-marker-core {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ml-turquoise);
+  border: 3px solid var(--ml-white);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes ml-marker-pulse {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.ml-home-marker-core {
+  width: 36px;
+  height: 36px;
+  background: var(--ml-navy);
+  border: 3px solid var(--ml-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* === Caregiver Settings & Controls Panel === */
+.ml-settings-card {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(16, 29, 45, 0.04);
+}
+
+.ml-settings-title {
+  font-family: var(--ml-font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0 0 16px;
+}
+
+.ml-settings-group {
+  margin-bottom: 20px;
+}
+
+.ml-settings-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ml-navy);
+  margin-bottom: 8px;
+}
+
+.ml-radius-selector {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ml-radius-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--ml-aqua);
+  background: var(--ml-bg-surface-soft);
+  color: var(--ml-navy);
+  font-family: var(--ml-font-body);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ml-radius-btn:hover {
+  background: var(--ml-mint);
+  border-color: var(--ml-turquoise);
+}
+
+.ml-radius-btn-active {
+  background: var(--ml-turquoise);
+  color: var(--ml-white);
+  border-color: var(--ml-turquoise);
+}
+
+.ml-custom-radius-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ml-custom-radius-input {
+  width: 90px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--ml-aqua);
+  background: var(--ml-bg-surface-soft);
+  font-family: var(--ml-font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ml-navy);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.ml-custom-radius-input:focus,
+.ml-custom-radius-input-active {
+  border-color: var(--ml-turquoise);
+  box-shadow: 0 0 0 2px var(--ml-mint);
+}
+
+.ml-actions-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ml-btn-action {
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-family: var(--ml-font-body);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ml-btn-primary {
+  background: var(--ml-turquoise);
+  color: var(--ml-white);
+  border: none;
+}
+
+.ml-btn-primary:hover {
+  background: var(--ml-turquoise-dk);
+}
+
+.ml-btn-secondary {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  color: var(--ml-navy);
+}
+
+.ml-btn-secondary:hover {
+  background: var(--ml-mint);
+}
+
+/* === Movement History Timeline === */
+.ml-location-history-card {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(16, 29, 45, 0.04);
+}
+
+.ml-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.ml-history-title {
+  font-family: var(--ml-font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0;
+}
+
+.ml-history-subtitle {
+  font-size: 15px;
+  color: var(--ml-grey);
+  margin: 4px 0 0;
+}
+
+.ml-btn-clear-history {
+  background: transparent;
+  border: 1px solid #C5D0D2;
+  color: var(--ml-grey);
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ml-btn-clear-history:hover {
+  background: #FEE2E2;
+  border-color: #FCA5A5;
+  color: #991B1B;
+}
+
+.ml-history-empty {
+  text-align: center;
+  padding: 36px 20px;
+  background: var(--ml-bg-surface-soft);
+  border-radius: 14px;
+}
+
+.ml-history-empty-icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ml-history-empty-text {
+  font-size: 15px;
+  color: var(--ml-grey);
+  margin: 0;
+}
+
+.ml-history-timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+.ml-history-timeline::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 7px;
+  width: 2px;
+  background: var(--ml-aqua);
+}
+
+.ml-history-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ml-history-item:hover .ml-history-content {
+  border-color: var(--ml-turquoise);
+  background: #F0FAF8;
+}
+
+.ml-history-item-selected .ml-history-content {
+  border-color: var(--ml-navy);
+  background: #EAF9F7;
+  box-shadow: 0 2px 8px rgba(16, 29, 45, 0.08);
+}
+
+.ml-history-dot-selected {
+  background: var(--ml-navy) !important;
+  box-shadow: 0 0 0 3px var(--ml-turquoise) !important;
+}
+
+.ml-history-tap-hint {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ml-turquoise-dk);
+  margin-top: 6px;
+}
+
+/* Historical pin on map */
+.ml-history-marker-core {
+  width: 32px;
+  height: 32px;
+  background: var(--ml-navy);
+  border: 3px solid var(--ml-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ml-map-selected-history-banner {
+  position: absolute;
+  top: 14px;
+  left: 50px;
+  background: var(--ml-navy);
+  color: var(--ml-white);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.ml-btn-dismiss-history-pin {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: var(--ml-white);
+  border-radius: 10px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ml-btn-dismiss-history-pin:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Clear History Confirmation Box */
+.ml-clear-confirm-card {
+  background: #FEF2F2;
+  border: 1px solid #FCA5A5;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
+.ml-clear-confirm-text {
+  font-size: 14px;
+  color: #991B1B;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.ml-clear-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ml-btn-clear-danger {
+  background: #DC2626;
+  color: var(--ml-white);
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ml-btn-clear-danger:hover {
+  background: #B91C1C;
+}
+
+.ml-btn-clear-cancel {
+  background: var(--ml-white);
+  color: var(--ml-navy);
+  border: 1px solid #C5D0D2;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ml-btn-clear-cancel:hover {
+  background: #F4F6F7;
+}
+
+.ml-history-item:last-child {
+  padding-bottom: 0;
+}
+
+.ml-history-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ml-turquoise);
+  border: 3px solid var(--ml-white);
+  box-shadow: 0 0 0 2px var(--ml-aqua);
+  z-index: 2;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.ml-history-content {
+  flex-grow: 1;
+  background: var(--ml-bg-surface-soft);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.ml-history-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ml-history-time {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ml-navy);
+}
+
+.ml-history-distance-badge {
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--ml-mint);
+  color: #0A6A5E;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.ml-history-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--ml-grey);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* === Architectural Sync Disclosure Card === */
+.ml-architecture-notice {
+  background: #FFF8E6;
+  border: 1px solid #F5C842;
+  border-radius: 14px;
+  padding: 16px 20px;
+  font-size: 14px;
+  color: #7A5800;
+  line-height: 1.5;
+  margin-top: 16px;
+}
+
+.ml-architecture-notice strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+/* === Patient Safety Screen Overlay (Calm SOS) === */
+.ml-safety-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(16, 29, 45, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ml-safety-modal {
+  background: #FFFFFF;
+  border: 3px solid #08B9A5;
+  border-radius: 28px;
+  max-width: 580px;
+  width: 100%;
+  padding: 36px 30px;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  animation: ml-fade-in 0.3s ease-out;
+}
+
+@keyframes ml-fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ml-safety-icon-wrapper {
+  margin-bottom: 16px;
+}
+
+.ml-safety-heart-icon {
+  font-size: 52px;
+  display: inline-block;
+}
+
+.ml-safety-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  color: #101D2D;
+  margin: 0 0 14px;
+  line-height: 1.15;
+  letter-spacing: 0.5px;
+}
+
+.ml-safety-message {
+  font-size: 19px;
+  color: #667579;
+  margin: 0 0 24px;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.ml-safety-contact-card {
+  background: #D0F2EC;
+  border: 2px solid #08B9A5;
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 22px;
+}
+
+.ml-safety-contact-badge {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #069486;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.ml-safety-contact-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #101D2D;
+  margin-bottom: 10px;
+}
+
+.ml-safety-contact-phone-btn {
+  display: inline-block;
+  background: #101D2D;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 800;
+  padding: 12px 24px;
+  border-radius: 14px;
+  transition: all 0.2s;
+}
+
+.ml-safety-contact-phone-btn:hover {
+  background: #08B9A5;
+}
+
+.ml-safety-no-contact-notice {
+  background: #F4F6F7;
+  border: 1px solid #C5D0D2;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #667579;
+  margin-bottom: 22px;
+}
+
+.ml-safety-help-confirmation {
+  background: #EAF9F7;
+  border-left: 4px solid #08B9A5;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0A6A5E;
+}
+
+.ml-safety-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ml-btn-safety-help {
+  background: #08B9A5;
+  color: #FFFFFF;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 16px 28px;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(8, 185, 165, 0.35);
+  transition: all 0.2s;
+}
+
+.ml-btn-safety-help:hover {
+  background: #069486;
+  transform: translateY(-1px);
+}
+
+.ml-btn-safety-dismiss {
+  background: transparent;
+  color: #101D2D;
+  border: 2px solid #A9E8DE;
+  font-family: 'Nunito', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ml-btn-safety-dismiss:hover {
+  background: #F0FAF8;
+  border-color: #08B9A5;
+}
+
+.ml-safety-footnote {
+  font-size: 13px;
+  color: #8FA3A8;
+  margin: 0;
+}
+
+/* === Caregiver Portal Safety Event Status Card === */
+.ml-caregiver-safety-card {
+  background: #EAF9F7;
+  border: 2px solid #08B9A5;
+  border-radius: 18px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.ml-caregiver-safety-card-breach {
+  background: #FFFBEB;
+  border-color: #F59E0B;
+}
+
+.ml-caregiver-safety-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #101D2D;
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ml-caregiver-safety-text {
+  font-size: 14px;
+  color: #4B5563;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.ml-caregiver-safety-meta {
+  font-size: 13px;
+  color: #069486;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* Caregiver Contact Form in Settings */
+.ml-contact-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.ml-contact-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--ml-aqua);
+  background: var(--ml-bg-surface-soft);
+  font-family: var(--ml-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ml-navy);
+  outline: none;
+}
+
+.ml-contact-input:focus {
+  border-color: var(--ml-turquoise);
+  box-shadow: 0 0 0 2px var(--ml-mint);
+}
+
+/* Active Safe-Zone Breach Alert Banner */
+.ml-caregiver-breach-alert {
+  background: #FEF2F2;
+  border: 2px solid #EF4444;
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.12);
+}
+
+.ml-caregiver-breach-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ml-caregiver-breach-title {
+  font-family: var(--ml-font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: #991B1B;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ml-caregiver-breach-badge {
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ml-caregiver-breach-body {
+  font-size: 14px;
+  color: #7F1D1D;
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+
+.ml-caregiver-breach-metrics {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  font-weight: 700;
+  color: #991B1B;
+  background: rgba(239, 68, 68, 0.06);
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+
+/* Alert History Section */
+.ml-alert-history-card {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(16, 29, 45, 0.04);
+}
+
+.ml-alert-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ml-alert-history-title {
+  font-family: var(--ml-font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0;
+}
+
+.ml-alert-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.ml-alert-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  background: #F9FAFB;
+  gap: 12px;
+}
+
+.ml-alert-item-initial {
+  border-color: #FCA5A5;
+  background: #FEF2F2;
+}
+
+.ml-alert-item-repeat {
+  border-color: #FCD34D;
+  background: #FFFBEB;
+}
+
+.ml-alert-item-resolved {
+  border-color: #A7F3D0;
+  background: #ECFDF5;
+}
+
+.ml-alert-item-info {
+  flex: 1;
+}
+
+.ml-alert-item-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ml-navy);
+  margin-bottom: 3px;
+}
+
+.ml-alert-item-desc {
+  font-size: 13px;
+  color: var(--ml-grey);
+  margin: 0;
+}
+
+.ml-alert-item-time {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ml-grey);
+  white-space: nowrap;
+}
+
+/* === Responsive tweaks === */
+@media (max-width: 600px) {
+  .ml-location-module {
+    padding: 16px 12px;
+  }
+  .ml-location-title {
+    font-size: 26px;
+  }
+  .ml-map-canvas {
+    height: 300px;
+  }
+  .ml-radius-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .ml-safety-heading {
+    font-size: 28px;
+  }
+  .ml-safety-message {
+    font-size: 16px;
+  }
+  .ml-contact-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
