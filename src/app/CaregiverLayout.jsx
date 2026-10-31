@@ -4,6 +4,7 @@ const NAV = [
   { href: '#overview', label: 'Overview' },
   { href: '#reminders', label: 'Reminders' },
   { href: '#activities', label: 'Activities' },
+  { href: '#safety', label: 'Location safety' },
 ]
 
 function NavLinks({ className, active }) {

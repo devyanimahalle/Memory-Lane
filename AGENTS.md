@@ -47,6 +47,7 @@ Memory Lane is a 24-hour hackathon prototype for dementia care. It has a gentle 
 - **Simulated data only.** No real patient data, external APIs, hardware integrations or medical diagnosis.
 - The experience must be calm, accessible and non-judgmental (see `DESIGN.md`).
 - Alerts describe changes from the person's own baseline. They never diagnose.
+- **Approved exceptions (Lead, 2026-10-31), prototype only:** (1) location sharing reads the patient's browser geolocation, only after the patient says yes on the patient screen, and stores it in this browser only; (2) the caregiver map loads OpenStreetMap tiles through Leaflet (the one added dependency); (3) the voice assistant may use the browser's speech recognition, only after the patient says yes (Chrome may send audio to its speech service). Address search (Nominatim) is not used. Nothing is ever sent to another device or browser.
 
 ## Code conventions
 - Function components with hooks. Plain JS, no TypeScript.

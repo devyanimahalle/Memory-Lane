@@ -1,3 +1,4 @@
+import { useSos } from './sos/useSos'
 import { useView } from './useView'
 
 const OPTIONS = [
@@ -7,6 +8,8 @@ const OPTIONS = [
 
 export function ViewSwitcher() {
   const { view, setView } = useView()
+  const { current } = useSos()
+  const waiting = current?.status === 'sent' // an SOS the caregiver has not acknowledged yet
 
   return (
     <fieldset className="m-0 min-w-0 border-0 p-0">
@@ -24,6 +27,14 @@ export function ViewSwitcher() {
             />
             <span className="flex min-h-touch items-center rounded-md px-4 text-body font-medium text-ink-soft transition-colors duration-quick ease-gentle peer-checked:bg-accent peer-checked:text-on-accent peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus">
               {label}
+              {value === 'caregiver' && waiting && (
+                <>
+                  <span aria-hidden="true" className="ml-2 rounded-full bg-sos px-2 text-caption font-bold text-on-accent">
+                    SOS
+                  </span>
+                  <span className="sr-only">, SOS alert waiting</span>
+                </>
+              )}
             </span>
           </label>
         ))}

@@ -28,9 +28,9 @@ export const MEMORIES = [
     scene: 'seaside',
     title: 'A day at the seaside',
     when: 'A sunny summer',
-    people: 'With Sarah',
+    people: 'With Ananya',
     description:
-      'You and Sarah spent the whole afternoon by the sea. You paddled at the water’s edge, shared a picnic on the sand and watched the sun sink low. Sarah still talks about how much you laughed that day.',
+      'You and Ananya spent the whole afternoon by the sea. You paddled at the water’s edge, shared a picnic on the sand and watched the sun sink low. Ananya still talks about how much you laughed that day.',
     shots: [
       ['Paddling at the water’s edge', 'Two people standing on a sandy beach beside a calm blue sea'],
       ['The sun going down', 'A golden evening sky over the sea'],
@@ -98,9 +98,9 @@ export const MEMORIES = [
     scene: 'autumn',
     title: 'An autumn walk in the park',
     when: 'A golden October',
-    people: 'With Sarah',
+    people: 'With Ananya',
     description:
-      'The leaves had turned gold and orange, and the path was soft underfoot. You and Sarah sat on the bench for a while and listened to the park. It was peaceful.',
+      'The leaves had turned gold and orange, and the path was soft underfoot. You and Ananya sat on the bench for a while and listened to the park. It was peaceful.',
     shots: [
       ['Golden leaves overhead', 'Tall trees with orange and gold leaves above a park path'],
       ['A peach-coloured sky', 'A park bench under trees in a warm evening light'],

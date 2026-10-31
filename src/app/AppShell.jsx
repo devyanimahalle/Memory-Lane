@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { SosHistoryGuard } from './sos/SosHistoryGuard'
 import { useView } from './useView'
 import { ViewSwitcher } from './ViewSwitcher'
 import { PatientLayout } from './PatientLayout'
@@ -32,6 +33,8 @@ export function AppShell() {
         <p className="font-heading text-2xl leading-none font-bold text-ink">Memory Lane</p>
         <ViewSwitcher />
       </div>
+
+      <SosHistoryGuard />
 
       <p className="sr-only" role="status" aria-live="polite">
         Showing {VIEW_LABELS[view]}

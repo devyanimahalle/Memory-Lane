@@ -11,6 +11,10 @@ const VARIANTS = {
   secondary:
     'border-2 border-accent bg-surface text-accent hover:bg-accent-soft',
   quiet: 'text-accent hover:bg-accent-soft',
+  // For the dark game pages only (navy ground): mint fill, a quiet outline, a plain text button.
+  dark: 'bg-sunken text-ink hover:bg-accent-soft',
+  'dark-secondary': 'border-2 border-line-strong bg-transparent text-on-deep hover:border-turquoise hover:bg-accent',
+  'dark-quiet': 'text-on-deep hover:bg-accent',
 }
 
 // Pill button for patient screens. 56px minimum height.

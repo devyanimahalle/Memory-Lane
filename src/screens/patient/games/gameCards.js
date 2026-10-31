@@ -1,28 +1,26 @@
-import { gameArt } from './gameArt'
+import { GAME_COVERS, GAME_IDS } from '../../../features/activities'
 
-// The three games shown in the Patient Home gallery. Presentation data only: the games
-// themselves come from the activities feature (Member 3 / Richa).
-//
-// Integration point: GamesSection calls `onSelect(game)` with one of these entries. Wire
-// that in PatientHome (or add a `route` / `Page` field here) when the real game pages exist.
-// Cover art: replace `gameArt(...)` with a portrait (3:4) image, e.g. `/games/<id>/cover.jpg`.
+// The three games shown in the Patient Home gallery, in Richa's original names. Presentation only:
+// the games themselves come from the activities feature (src/features/activities/index.js).
+// `GamesSection` calls `onSelect(game)` with one of these entries and `PatientHome` opens the
+// game whose id matches. Covers are the portrait (3:4) illustrations from the activities art.
 export const GAMES = [
   {
-    id: 'pairs',
-    title: 'Match the pairs',
+    id: GAME_IDS.matchingPairs,
+    title: 'Matching Pairs',
     blurb: 'Turn over the cards and find the twins.',
-    cover: { src: gameArt('pairs'), alt: 'Cards laid out in a grid, two of them turned over' },
+    cover: { src: GAME_COVERS.pairs, alt: 'Cards laid out in a grid, some turned over to show an apple and a tea cup' },
   },
   {
-    id: 'picture',
-    title: 'Pick the picture',
-    blurb: 'Choose the one that belongs.',
-    cover: { src: gameArt('picture'), alt: 'A garden picture with three choices below it' },
+    id: GAME_IDS.spotTheDifference,
+    title: 'Spot the Difference',
+    blurb: 'Look at two pictures and find what is different.',
+    cover: { src: GAME_COVERS.difference, alt: 'The same garden drawn twice, one above the other' },
   },
   {
-    id: 'word',
-    title: 'Find the word',
-    blurb: 'Put the letters in place, at your pace.',
-    cover: { src: gameArt('word'), alt: 'Six letter tiles spelling a word' },
+    id: GAME_IDS.picturePuzzle,
+    title: 'Picture Puzzle',
+    blurb: 'Put the pieces back together, at your pace.',
+    cover: { src: GAME_COVERS.puzzle, alt: 'A lakeside picture cut into pieces, with one piece lifted out' },
   },
 ]

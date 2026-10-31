@@ -42,6 +42,10 @@
   --color-attention-ink: #6b4000; /* 7.6:1 on attention-soft */
   --color-attention-soft: #fbeccb;
 
+  /* SOS: warm coral for the SOS button and caregiver SOS alert only (the one exception to "no alarm red") */
+  --color-sos: #c8443a; /* 4.8:1 with white text */
+  --color-sos-strong: #a63229; /* hover and pressed, 6.8:1 with white text */
+
   /* Category tints: ink text reaches 12:1, ink-soft 7.2:1 or better */
   --color-tint-sage: #ddf0e4;
   --color-tint-sky: #dcebf7;

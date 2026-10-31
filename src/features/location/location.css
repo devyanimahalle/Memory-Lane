@@ -1,0 +1,1173 @@
+/**
+ * location.css - Memory Lane GPS Location Tracking & Caregiver Dashboard Styles
+ *
+ * Theme palette:
+ *   Mint:       var(--color-accent-soft)
+ *   Turquoise:  var(--color-turquoise)
+ *   Deep Navy:  var(--color-ink)
+ *   White:      var(--color-surface)
+ *   Light Aqua: var(--color-accent-soft)
+ *   Muted Grey: var(--color-ink-soft)
+ *
+ * Typography:
+ *   Display/Headings: Barlow Condensed
+ *   Body Text:        Nunito
+ */
+
+/* === Top-level Container === */
+.ml-location-module {
+  --ml-mint:           var(--color-accent-soft);
+  --ml-turquoise:      var(--color-turquoise);
+  --ml-turquoise-dk:   var(--color-accent);
+  --ml-navy:           var(--color-ink);
+  --ml-aqua:           var(--color-accent-soft);
+  --ml-grey:           var(--color-ink-soft);
+  --ml-white:          var(--color-surface);
+
+  --ml-bg-page:         var(--color-accent-soft);
+  --ml-bg-surface:      var(--color-surface);
+  --ml-bg-surface-soft: var(--color-canvas);
+  --ml-bg-dark-card:    var(--color-ink);
+
+  --ml-font-display: var(--font-heading);
+  --ml-font-body:    var(--font-sans);
+
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+  font-family: var(--ml-font-body);
+  color: var(--ml-navy);
+}
+
+/* === Dashboard Header === */
+.ml-location-header {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.ml-location-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.ml-location-title {
+  font-family: var(--ml-font-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+}
+
+.ml-location-subtitle {
+  font-size: 16px;
+  color: var(--ml-grey);
+  margin: 8px 0 0;
+  line-height: 1.45;
+}
+
+/* === Patient Consent / Transparency Notice === */
+.ml-transparency-card {
+  background: var(--color-sunken);
+  border-left: 4px solid var(--ml-turquoise);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: var(--color-accent);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ml-transparency-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ml-transparency-text {
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* === Status Badges === */
+.ml-status-pill-gps {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ml-status-active {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border: 1px solid var(--ml-turquoise);
+}
+
+.ml-status-requesting {
+  background: var(--color-attention-soft);
+  color: var(--color-attention-ink);
+  border: 1px solid var(--color-attention);
+}
+
+.ml-status-error {
+  background: var(--color-attention-soft);
+  color: var(--color-attention-ink);
+  border: 1px solid var(--color-attention);
+}
+
+.ml-status-idle {
+  background: var(--color-canvas);
+  color: var(--ml-grey);
+  border: 1px solid var(--color-line);
+}
+
+.ml-status-dot-active {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--ml-turquoise);
+  animation: ml-pulse 1.4s infinite;
+}
+
+@keyframes ml-pulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* === Overview Grid Cards === */
+.ml-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.ml-overview-card {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-ink) 3%, transparent);
+}
+
+.ml-overview-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ml-grey);
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.ml-overview-value {
+  font-family: var(--ml-font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.ml-overview-footnote {
+  font-size: 13px;
+  color: var(--ml-grey);
+  margin-top: 6px;
+}
+
+.ml-badge-safe {
+  color: var(--color-accent);
+}
+
+.ml-badge-outside {
+  color: var(--color-attention);
+}
+
+.ml-badge-unavailable {
+  color: var(--color-attention);
+}
+
+/* === Map Section === */
+.ml-map-section {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.ml-map-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--ml-aqua);
+}
+
+.ml-map-canvas {
+  height: 380px;
+  width: 100%;
+  background: var(--color-sunken);
+}
+
+.ml-map-canvas-selecting {
+  cursor: crosshair !important;
+}
+
+.ml-map-quick-actions {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ml-map-action-btn {
+  background: color-mix(in srgb, var(--color-ink) 95%, transparent);
+  border: 1px solid var(--ml-aqua);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ml-navy);
+  cursor: pointer;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-ink) 12%, transparent);
+  transition: all 0.2s ease;
+}
+
+.ml-map-action-btn:hover {
+  background: var(--ml-mint);
+  border-color: var(--ml-turquoise);
+}
+
+.ml-map-instruction-banner {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ml-navy);
+  color: var(--ml-white);
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  z-index: 500;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-ink) 20%, transparent);
+  white-space: nowrap;
+}
+
+.ml-map-overlay-notice {
+  position: absolute;
+  top: 14px;
+  left: 50px;
+  background: color-mix(in srgb, var(--color-ink) 92%, transparent);
+  border: 1px solid var(--ml-aqua);
+  color: var(--ml-navy);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 500;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-ink) 8%, transparent);
+}
+
+/* === Map Markers (Leaflet DivIcons) === */
+.ml-patient-marker-outer {
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+
+.ml-patient-marker-pulse {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-ink) 35%, transparent);
+  animation: ml-marker-pulse 1.8s infinite ease-out;
+}
+
+.ml-patient-marker-core {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ml-turquoise);
+  border: 3px solid var(--ml-white);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--color-ink) 30%, transparent);
+}
+
+@keyframes ml-marker-pulse {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.ml-home-marker-core {
+  width: 36px;
+  height: 36px;
+  background: var(--ml-navy);
+  border: 3px solid var(--ml-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 3px 8px color-mix(in srgb, var(--color-ink) 25%, transparent);
+}
+
+/* === Caregiver Settings & Controls Panel === */
+.ml-settings-card {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.ml-settings-title {
+  font-family: var(--ml-font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0 0 16px;
+}
+
+.ml-settings-group {
+  margin-bottom: 20px;
+}
+
+.ml-settings-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ml-navy);
+  margin-bottom: 8px;
+}
+
+.ml-radius-selector {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ml-radius-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--ml-aqua);
+  background: var(--ml-bg-surface-soft);
+  color: var(--ml-navy);
+  font-family: var(--ml-font-body);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ml-radius-btn:hover {
+  background: var(--ml-mint);
+  border-color: var(--ml-turquoise);
+}
+
+.ml-radius-btn-active {
+  background: var(--ml-turquoise);
+  color: var(--ml-white);
+  border-color: var(--ml-turquoise);
+}
+
+.ml-custom-radius-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ml-custom-radius-input {
+  width: 90px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--ml-aqua);
+  background: var(--ml-bg-surface-soft);
+  font-family: var(--ml-font-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ml-navy);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.ml-custom-radius-input:focus,
+.ml-custom-radius-input-active {
+  border-color: var(--ml-turquoise);
+  box-shadow: 0 0 0 2px var(--ml-mint);
+}
+
+.ml-actions-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ml-btn-action {
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-family: var(--ml-font-body);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ml-btn-primary {
+  background: var(--ml-turquoise);
+  color: var(--ml-white);
+  border: none;
+}
+
+.ml-btn-primary:hover {
+  background: var(--ml-turquoise-dk);
+}
+
+.ml-btn-secondary {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  color: var(--ml-navy);
+}
+
+.ml-btn-secondary:hover {
+  background: var(--ml-mint);
+}
+
+/* === Movement History Timeline === */
+.ml-location-history-card {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.ml-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.ml-history-title {
+  font-family: var(--ml-font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0;
+}
+
+.ml-history-subtitle {
+  font-size: 15px;
+  color: var(--ml-grey);
+  margin: 4px 0 0;
+}
+
+.ml-btn-clear-history {
+  background: transparent;
+  border: 1px solid var(--color-line);
+  color: var(--ml-grey);
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ml-btn-clear-history:hover {
+  background: var(--color-attention-soft);
+  border-color: var(--color-attention);
+  color: var(--color-attention-ink);
+}
+
+.ml-history-empty {
+  text-align: center;
+  padding: 36px 20px;
+  background: var(--ml-bg-surface-soft);
+  border-radius: 14px;
+}
+
+.ml-history-empty-icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ml-history-empty-text {
+  font-size: 15px;
+  color: var(--ml-grey);
+  margin: 0;
+}
+
+.ml-history-timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+.ml-history-timeline::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 7px;
+  width: 2px;
+  background: var(--ml-aqua);
+}
+
+.ml-history-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ml-history-item:hover .ml-history-content {
+  border-color: var(--ml-turquoise);
+  background: var(--color-sunken);
+}
+
+.ml-history-item-selected .ml-history-content {
+  border-color: var(--ml-navy);
+  background: var(--color-sunken);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-ink) 8%, transparent);
+}
+
+.ml-history-dot-selected {
+  background: var(--ml-navy) !important;
+  box-shadow: 0 0 0 3px var(--ml-turquoise) !important;
+}
+
+.ml-history-tap-hint {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ml-turquoise-dk);
+  margin-top: 6px;
+}
+
+/* Historical pin on map */
+.ml-history-marker-core {
+  width: 32px;
+  height: 32px;
+  background: var(--ml-navy);
+  border: 3px solid var(--ml-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 3px 8px color-mix(in srgb, var(--color-ink) 30%, transparent);
+}
+
+.ml-map-selected-history-banner {
+  position: absolute;
+  top: 14px;
+  left: 50px;
+  background: var(--ml-navy);
+  color: var(--ml-white);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 3px 8px color-mix(in srgb, var(--color-ink) 20%, transparent);
+}
+
+.ml-btn-dismiss-history-pin {
+  background: color-mix(in srgb, var(--color-ink) 20%, transparent);
+  border: none;
+  color: var(--ml-white);
+  border-radius: 10px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ml-btn-dismiss-history-pin:hover {
+  background: color-mix(in srgb, var(--color-ink) 35%, transparent);
+}
+
+/* Clear History Confirmation Box */
+.ml-clear-confirm-card {
+  background: var(--color-attention-soft);
+  border: 1px solid var(--color-attention);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
+.ml-clear-confirm-text {
+  font-size: 14px;
+  color: var(--color-attention-ink);
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.ml-clear-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ml-btn-clear-danger {
+  background: var(--color-attention);
+  color: var(--ml-white);
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ml-btn-clear-danger:hover {
+  background: var(--color-attention);
+}
+
+.ml-btn-clear-cancel {
+  background: var(--ml-white);
+  color: var(--ml-navy);
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ml-btn-clear-cancel:hover {
+  background: var(--color-canvas);
+}
+
+.ml-history-item:last-child {
+  padding-bottom: 0;
+}
+
+.ml-history-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ml-turquoise);
+  border: 3px solid var(--ml-white);
+  box-shadow: 0 0 0 2px var(--ml-aqua);
+  z-index: 2;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.ml-history-content {
+  flex-grow: 1;
+  background: var(--ml-bg-surface-soft);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.ml-history-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ml-history-time {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ml-navy);
+}
+
+.ml-history-distance-badge {
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--ml-mint);
+  color: var(--color-accent);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.ml-history-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--ml-grey);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* === Architectural Sync Disclosure Card === */
+.ml-architecture-notice {
+  background: var(--color-attention-soft);
+  border: 1px solid var(--color-attention);
+  border-radius: 14px;
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--color-attention-ink);
+  line-height: 1.5;
+  margin-top: 16px;
+}
+
+.ml-architecture-notice strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+/* === Patient Safety Screen Overlay (Calm SOS) === */
+.ml-safety-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: color-mix(in srgb, var(--color-ink) 75%, transparent);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ml-safety-modal {
+  background: var(--color-surface);
+  border: 3px solid var(--color-turquoise);
+  border-radius: 28px;
+  max-width: 580px;
+  width: 100%;
+  padding: 36px 30px;
+  text-align: center;
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--color-ink) 30%, transparent);
+  animation: ml-fade-in 0.3s ease-out;
+}
+
+@keyframes ml-fade-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ml-safety-icon-wrapper {
+  margin-bottom: 16px;
+}
+
+.ml-safety-heart-icon {
+  font-size: 52px;
+  display: inline-block;
+}
+
+.ml-safety-heading {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--color-ink);
+  margin: 0 0 14px;
+  line-height: 1.15;
+  letter-spacing: 0.5px;
+}
+
+.ml-safety-message {
+  font-size: 19px;
+  color: var(--color-ink-soft);
+  margin: 0 0 24px;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.ml-safety-contact-card {
+  background: var(--color-accent-soft);
+  border: 2px solid var(--color-turquoise);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 22px;
+}
+
+.ml-safety-contact-badge {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.ml-safety-contact-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-ink);
+  margin-bottom: 10px;
+}
+
+.ml-safety-contact-phone-btn {
+  display: inline-block;
+  background: var(--color-ink);
+  color: var(--color-surface);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 800;
+  padding: 12px 24px;
+  border-radius: 14px;
+  transition: all 0.2s;
+}
+
+.ml-safety-contact-phone-btn:hover {
+  background: var(--color-turquoise);
+}
+
+.ml-safety-no-contact-notice {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--color-ink-soft);
+  margin-bottom: 22px;
+}
+
+.ml-safety-help-confirmation {
+  background: var(--color-sunken);
+  border-left: 4px solid var(--color-turquoise);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.ml-safety-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ml-btn-safety-help {
+  background: var(--color-turquoise);
+  color: var(--color-surface);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 800;
+  padding: 16px 28px;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-ink) 35%, transparent);
+  transition: all 0.2s;
+}
+
+.ml-btn-safety-help:hover {
+  background: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.ml-btn-safety-dismiss {
+  background: transparent;
+  color: var(--color-ink);
+  border: 2px solid var(--color-accent-soft);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ml-btn-safety-dismiss:hover {
+  background: var(--color-sunken);
+  border-color: var(--color-turquoise);
+}
+
+.ml-safety-footnote {
+  font-size: 13px;
+  color: var(--color-line-strong);
+  margin: 0;
+}
+
+/* === Caregiver Portal Safety Event Status Card === */
+.ml-caregiver-safety-card {
+  background: var(--color-sunken);
+  border: 2px solid var(--color-turquoise);
+  border-radius: 18px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.ml-caregiver-safety-card-breach {
+  background: var(--color-attention-soft);
+  border-color: var(--color-attention);
+}
+
+.ml-caregiver-safety-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-ink);
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ml-caregiver-safety-text {
+  font-size: 14px;
+  color: var(--color-ink-soft);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.ml-caregiver-safety-meta {
+  font-size: 13px;
+  color: var(--color-accent);
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* Caregiver Contact Form in Settings */
+.ml-contact-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.ml-contact-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--ml-aqua);
+  background: var(--ml-bg-surface-soft);
+  font-family: var(--ml-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ml-navy);
+  outline: none;
+}
+
+.ml-contact-input:focus {
+  border-color: var(--ml-turquoise);
+  box-shadow: 0 0 0 2px var(--ml-mint);
+}
+
+/* Active Safe-Zone Breach Alert Banner */
+.ml-caregiver-breach-alert {
+  background: var(--color-attention-soft);
+  border: 2px solid var(--color-attention);
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-ink) 12%, transparent);
+}
+
+.ml-caregiver-breach-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ml-caregiver-breach-title {
+  font-family: var(--ml-font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-attention-ink);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ml-caregiver-breach-badge {
+  background: var(--color-attention);
+  color: var(--color-surface);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ml-caregiver-breach-body {
+  font-size: 14px;
+  color: var(--color-attention-ink);
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+
+.ml-caregiver-breach-metrics {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-attention-ink);
+  background: color-mix(in srgb, var(--color-ink) 6%, transparent);
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+
+/* Alert History Section */
+.ml-alert-history-card {
+  background: var(--ml-white);
+  border: 1px solid var(--ml-aqua);
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.ml-alert-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ml-alert-history-title {
+  font-family: var(--ml-font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--ml-navy);
+  margin: 0;
+}
+
+.ml-alert-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.ml-alert-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--color-sunken);
+  background: var(--color-canvas);
+  gap: 12px;
+}
+
+.ml-alert-item-initial {
+  border-color: var(--color-attention);
+  background: var(--color-attention-soft);
+}
+
+.ml-alert-item-repeat {
+  border-color: var(--color-attention);
+  background: var(--color-attention-soft);
+}
+
+.ml-alert-item-resolved {
+  border-color: var(--color-line);
+  background: var(--color-canvas);
+}
+
+.ml-alert-item-info {
+  flex: 1;
+}
+
+.ml-alert-item-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ml-navy);
+  margin-bottom: 3px;
+}
+
+.ml-alert-item-desc {
+  font-size: 13px;
+  color: var(--ml-grey);
+  margin: 0;
+}
+
+.ml-alert-item-time {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ml-grey);
+  white-space: nowrap;
+}
+
+/* === Responsive tweaks === */
+@media (max-width: 600px) {
+  .ml-location-module {
+    padding: 16px 12px;
+  }
+  .ml-location-title {
+    font-size: 26px;
+  }
+  .ml-map-canvas {
+    height: 300px;
+  }
+  .ml-radius-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .ml-safety-heading {
+    font-size: 28px;
+  }
+  .ml-safety-message {
+    font-size: 16px;
+  }
+  .ml-contact-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === Integration overrides (Memory Lane caregiver dashboard) ===
+   The dashboard section supplies the page spacing and width, and the Leaflet map uses the app fonts. */
+.ml-location-module {
+  max-width: none;
+  padding: 0;
+}
+
+.ml-location-module .leaflet-container {
+  font-family: var(--font-sans);
+}

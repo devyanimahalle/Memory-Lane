@@ -1,7 +1,9 @@
+import { LocationModule } from '../../features/location'
 import { AlertList } from './analytics/AlertList'
 import { DayStrip } from './analytics/DayStrip'
 import { EngagementChart } from './analytics/EngagementChart'
 import { MedicineWeek } from './analytics/MedicineWeek'
+import { SosAlertPanel } from './sos/SosAlertPanel'
 import { TREND_TEXT, daysWithDataText, friendlyDate } from './analytics/format'
 import { useAnalyticsSummary } from './analytics/useAnalyticsSummary'
 
@@ -121,6 +123,8 @@ export function CaregiverDashboard() {
         </p>
       </header>
 
+      <SosAlertPanel />
+
       <Section id="overview" title="Overview">
         <Panel title="Engagement, last 7 days" rule="accent">
           <EngagementChart daily={daily} baseline={baselinePerDay} />
@@ -153,6 +157,13 @@ export function CaregiverDashboard() {
           <MealsPanel daily={daily} weekly={weekly} />
         </Panel>
       </Section>
+
+      <section id="safety" aria-labelledby="safety-title" className="scroll-mt-24">
+        <h2 id="safety-title" className="mb-4 text-title font-bold">
+          Location safety
+        </h2>
+        <LocationModule />
+      </section>
 
       <p className="text-caption text-ink-faint">{summary.note}</p>
     </div>

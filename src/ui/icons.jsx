@@ -98,6 +98,13 @@ const PATHS = {
     </>
   ),
   record: <circle cx="12" cy="12" r="6" />,
+  lifebuoy: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="3.8" />
+      <path d="M5.6 5.6l3.7 3.7M14.7 14.7l3.7 3.7M18.4 5.6l-3.7 3.7M9.3 14.7l-3.7 3.7" />
+    </>
+  ),
   volume: (
     <>
       <path d="M4 10v4h4l5 4V6L8 10z" />
