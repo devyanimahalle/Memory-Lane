@@ -1,4 +1,4 @@
-# DESIGN.md — Memory Lane
+# DESIGN.md — CogniCare
 
 Owned by the Lead. Propose changes in `TASKS.md` → **Requests**.
 
@@ -119,7 +119,7 @@ Voice is a full requirement with spoken **input and output**. This document cove
 ## Pattern separation
 - **Reusable (adopt nearly as is):** bento tile grid, greeting banner, dotted timeline, pill buttons and count badges, tinted category tiles, dark analytics card, "Remind me later".
 - **Adaptations:** the palette (see tiers above), type, Yes/No to **Done / Not yet**, rings and percentages to calm phrases, donut to a single-hue chart with a baseline band, indigo to deep teal.
-- **Unique to Memory Lane:** the Lane timeline motif, voice commands, the album with spoken prompts, a simulated 7-day baseline with "vs usual" alerts, non-judgmental copy.
+- **Unique to CogniCare:** the day-lane timeline motif, voice commands, the album with spoken prompts, a simulated 7-day baseline with "vs usual" alerts, non-judgmental copy.
 
 ## Patient Home prototype (built)
 `src/screens/patient/` with shared `src/ui/Button.jsx` and `src/ui/icons.jsx`. Mock data only.
@@ -191,7 +191,7 @@ Existing Mint Daylight tokens only; no new hues. The chart-3 purple is a chart-s
 - **Today's lane tints (category, not state, cool only):** medicine = `tint-sky`, meals = `tint-sage`, outdoors = `sunken` (mint), tea, water and calls = `accent-soft`. Done = `gentle`, Next = `accent`. State stays in words and icons.
 - **Caregiver:** `sunken` sidebar with an active item (`accent-soft`, 4px `accent` left bar, `aria-current`); panels are white with a 4px top rule per section (Overview `accent`, Reminders `turquoise`, Activities `gentle`, Alerts `deep`). No yellow or amber fills; the `attention` tokens stay defined for later use.
 - **Memory Album band:** the `sunken` (mint, #e3f4ee) background runs edge to edge across the viewport; the album content stays centred in the normal page column. It is done with a clipped `box-shadow` on the section (no `w-screen`; the shadow colour is `var(--color-sunken)`), so it adds no horizontal scroll.
-- **Shell:** the top bar shows the **Memory Lane** wordmark on the left (Oswald, 24px, bold, navy) and the view switcher on the right; the demo bar is white so it does not compete with the page mint.
+- **Shell:** the top bar shows the **CogniCare** wordmark on the left (Oswald, 24px, bold, navy) and the view switcher on the right; the demo bar is white so it does not compete with the page mint.
 - **Rules:** tints mean category and are never whole-page washes; no gradients, glows, red, yellow or pink fills added by the UI. **No hex outside `src/index.css`**, except token mirrors in the drawn data-URI art (`demoArt.js`, and the activities art, which reads its colours from `index.css`), which only use token values. The carousel's RGB fringe (`dispersion`) is off.
 - **Contrast:** checked with a node script over the new pairs; patient text 7:1 or better (ink on tints 12:1 or better), non-text marks 3:1 or better.
 

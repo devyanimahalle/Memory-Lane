@@ -1,5 +1,5 @@
 /**
- * safetyMonitor.test.js - Comprehensive Automated Unit Tests for Memory Lane GPS Alert System
+ * safetyMonitor.test.js - Comprehensive Automated Unit Tests for CogniCare GPS Alert System
  *
  * Verifies all 10 core requirements:
  * 1. Inside safe radius (no alerts, breach remains null)
@@ -34,7 +34,7 @@ function assert(condition, message) {
   }
 }
 
-console.log('\n--- Running Automated Memory Lane GPS Alert System Tests ---\n');
+console.log('\n--- Running Automated CogniCare GPS Alert System Tests ---\n');
 
 // Standard test coordinates (Home at Bengaluru center)
 const HOME = { lat: 12.9716, lng: 77.5946 };

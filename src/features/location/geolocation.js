@@ -1,5 +1,5 @@
 /**
- * geolocation.js - Robust Browser Geolocation API Wrapper for Memory Lane
+ * geolocation.js - Robust Browser Geolocation API Wrapper for CogniCare
  *
  * Responsibilities:
  * - Request browser GPS permission transparently

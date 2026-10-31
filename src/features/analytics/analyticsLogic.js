@@ -1,7 +1,7 @@
 /**
  * analyticsLogic.js
  *
- * Simple, deterministic analytics for the Memory Lane caregiver dashboard.
+ * Simple, deterministic analytics for the CogniCare caregiver dashboard.
  * Uses SIMULATED data only. It does not diagnose or make medical claims.
  *
  * The frontend only needs one function:

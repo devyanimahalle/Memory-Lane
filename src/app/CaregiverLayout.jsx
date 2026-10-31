@@ -72,7 +72,7 @@ export function CaregiverLayout({ children }) {
         className="sticky top-0 z-10 border-b border-line bg-sunken px-gutter py-2 md:h-dvh md:w-60 md:shrink-0 md:border-r md:border-b-0 md:py-gutter"
       >
         <p className="hidden px-4 pb-4 font-heading text-title font-bold md:block">
-          Memory Lane
+          CogniCare
         </p>
         <NavLinks className="flex gap-1 overflow-x-auto md:flex-col" active={active} />
       </nav>

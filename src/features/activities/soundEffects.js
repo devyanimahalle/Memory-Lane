@@ -1,4 +1,4 @@
-// Web Audio API synthesizers for soothing, dementia-friendly feedback in Memory Lane
+// Web Audio API synthesizers for soothing, dementia-friendly feedback in CogniCare
 let audioCtx = null;
 
 // Sound preference, remembered on this device. Sounds are on unless the person turns them off.

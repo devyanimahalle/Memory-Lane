@@ -1,4 +1,4 @@
-// Placeholder visuals use existing Memory Lane tokens only. Each tone is a Tailwind token class
+// Placeholder visuals use existing CogniCare tokens only. Each tone is a Tailwind token class
 // (full class names so Tailwind can see them). Real illustrations replace these later.
 export const TONES = {
   white: 'bg-surface',

@@ -1,4 +1,4 @@
-// Simulated SOS state for the Memory Lane prototype. Nothing is sent anywhere.
+// Simulated SOS state for the CogniCare prototype. Nothing is sent anywhere.
 //
 // One small external store, read with useSyncExternalStore (see useSos.js). It is kept in
 // localStorage so an alert survives a reload, and the `storage` event keeps every tab and window

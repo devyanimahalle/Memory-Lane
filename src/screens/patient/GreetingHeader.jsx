@@ -6,7 +6,7 @@ function greetingFor(minutes) {
   return 'Good evening'
 }
 
-// Flat quarter-circle motif (from the Memory Lane brand direction).
+// Flat quarter-circle motif (from the CogniCare brand direction).
 function QuarterMotif() {
   return (
     <svg

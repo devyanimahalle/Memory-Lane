@@ -1,4 +1,4 @@
-# AGENTS.md — Memory Lane
+# AGENTS.md — CogniCare
 
 Rules for every human and AI agent working in this repo.
 
@@ -7,7 +7,7 @@ Rules for every human and AI agent working in this repo.
 2. **Before ending every session:** update **both** `context.md` (status, decisions, session log) and `TASKS.md` (task status). No exceptions.
 
 ## Project
-Memory Lane is a 24-hour hackathon prototype for dementia care. It has a gentle companion for patients and a dashboard for remote caregivers. See `context.md` for the full brief.
+CogniCare is a 24-hour hackathon prototype for dementia care. It has a gentle companion for patients and a dashboard for remote caregivers. See `context.md` for the full brief.
 
 ## Stack and commands
 - React 19 + Vite 8, **JavaScript (JSX)**, Tailwind CSS v4 (`@tailwindcss/vite`), Motion for React (`motion`), oxlint.

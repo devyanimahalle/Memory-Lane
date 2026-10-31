@@ -1,5 +1,5 @@
 /**
- * location.css - Memory Lane GPS Location Tracking & Caregiver Dashboard Styles
+ * location.css - CogniCare GPS Location Tracking & Caregiver Dashboard Styles
  *
  * Theme palette:
  *   Mint:       var(--color-accent-soft)
@@ -1161,7 +1161,7 @@
   }
 }
 
-/* === Integration overrides (Memory Lane caregiver dashboard) ===
+/* === Integration overrides (CogniCare caregiver dashboard) ===
    The dashboard section supplies the page spacing and width, and the Leaflet map uses the app fonts. */
 .ml-location-module {
   max-width: none;

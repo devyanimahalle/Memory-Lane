@@ -1,5 +1,5 @@
 /**
- * geofence.js - Geofencing & Distance Utilities for Memory Lane GPS
+ * geofence.js - Geofencing & Distance Utilities for CogniCare GPS
  *
  * Responsibilities:
  * - Calculate great-circle distance between two GPS coordinates using Haversine formula

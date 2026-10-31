@@ -1,4 +1,4 @@
-# TASKS.md — Memory Lane
+# TASKS.md — CogniCare
 
 > Update before ending every session. Format: `- [ ] task (owner)`. Move items between sections as they progress.
 
@@ -24,11 +24,11 @@
 - [ ] Review the Patient Home prototype in the browser and list changes (Lead)
 - [ ] Patient home: wire the prototype to real reminders, games and album exports (replace `mockData.js` and `SectionPreview.jsx`)
 - [ ] Voice: connect the real voice feature to `runCommand(id)` in `PatientHome.jsx` (Lead and Ishani)
-- [ ] Replace the placeholder page title and add the active nav highlight (Lead)
+- [ ] Add the active nav highlight for patient section pages and the caregiver nav (page title is done: CogniCare) (Lead)
 - [ ] Caregiver dashboard: recompose to the direction (greeting banner, KPI cards, deep-teal chart, alerts) for mobile and desktop
 - [x] Caregiver dashboard: replace placeholder panels with real data and charts (analytics summary integrated, CSS chart)
 - [ ] Integrate the feature exports into the screens
-- [ ] Rewrite `README.md` for the project
+- [x] Rewrite `README.md` for the project (short CogniCare readme; expand later)
 
 **Member 2: reminders**
 - [x] Reminder data model, status and snooze logic, completion events and voice-phrase matching integrated into Patient Home (Lead, 2026-10-31; Ishani to review the port)
@@ -64,6 +64,7 @@
 - **Sahasra (analytics, earlier):** (1) please review the Lead-added `src/features/analytics/index.js` (re-exports `getAnalyticsSummary` only). (2) Add per-game and per-album counts to `daily[]` so the dashboard can split engagement. (3) Optional: a `dateLabel` on alerts, or message templates without the raw ISO date (the dashboard currently rewrites the date with a regex). (4) Confirm the provisional thresholds and the patient identity (`analyticsPatient.displayName`) with the product lead.
 
 ## Done
+- [x] Rebrand to CogniCare: wordmarks, tab title and metadata, README, npm package name, docs and source comments; storage keys, the IndexedDB name, repo, folder and branches intentionally unchanged (Lead, 2026-10-31)
 - [x] Editable daily tasks: patient "My daily tasks" (add, edit, done, later, delete with confirmation, medicine confirmation) and caregiver "Manage patient tasks" (add, edit with date, time and type, delete with confirmation, status summary, completion history, demo reset), one shared Reminder store, same-browser sync, disclosed (Lead, 2026-10-31)
 - [x] Ishani's work integrated: reminders and voice into Patient Home (existing UI), GPS location sharing on the patient side with explicit consent and a caregiver Location safety section (same-browser, disclosed), Leaflet added, AGENTS.md exceptions recorded (Lead, 2026-10-31)
 - [x] SOS button moved to the right edge of the viewport, vertically centred, with a reserved right gutter; verified at 375, 768 and 1280px on every patient page with no overlap or horizontal scroll (Lead, 2026-10-31)

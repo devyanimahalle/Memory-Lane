@@ -34,7 +34,7 @@ export function AppShell() {
       </a>
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-surface px-gutter py-2">
-        <p className="font-heading text-2xl leading-none font-bold text-ink">Memory Lane</p>
+        <p className="font-heading text-2xl leading-none font-bold text-ink">CogniCare</p>
         <ViewSwitcher />
       </div>
 

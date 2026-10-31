@@ -1,7 +1,7 @@
 /**
  * analyticsData.js
  *
- * SIMULATED seven-day activity data for the Memory Lane caregiver dashboard.
+ * SIMULATED seven-day activity data for the CogniCare caregiver dashboard.
  * This is demo data only. No real patient information is used.
  *
  * Rules for this data:
